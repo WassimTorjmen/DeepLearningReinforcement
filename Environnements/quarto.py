@@ -1,6 +1,6 @@
 import numpy as np
 
-# Indices des 10 lignes gagnantes (indices plats 0-15)
+# Indices des 10 lignes gagnantes (indices plats 0 à 15)
 _WIN_LINES = [
     (0,  1,  2,  3),
     (4,  5,  6,  7),
