@@ -160,13 +160,13 @@ class QuartoEnv:
         board = self._board
         for line in _LINES_FOR_CELL[last_pos]:
             a, b, c, d = line
-            pa = board[a];
+            pa = board[a]
             if pa == -1: continue
-            pb = board[b];
+            pb = board[b]
             if pb == -1: continue
-            pc = board[c];
+            pc = board[c]
             if pc == -1: continue
-            pd = board[d];
+            pd = board[d]
             if pd == -1: continue
             aa = _PIECE_ATTRS[pa]
             ab = _PIECE_ATTRS[pb]
