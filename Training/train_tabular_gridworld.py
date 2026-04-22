@@ -1,7 +1,6 @@
 import os
 import sys
 
-# Permet d'importer les modules du projet
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(project_root)
 
