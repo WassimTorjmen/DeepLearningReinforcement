@@ -1,3 +1,8 @@
+"""
+Interface graphique pygame pour GridWorld.
+Flèches directionnelles pour déplacer l'agent, R pour reset.
+"""
+
 import pygame
 from grid_world import GridWorld
 

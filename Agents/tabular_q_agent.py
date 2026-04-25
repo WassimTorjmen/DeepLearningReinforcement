@@ -1,3 +1,8 @@
+"""
+Q-learning tabulaire : stocke Q(s,a) dans un dictionnaire (états discrets).
+Adapté à LineWorld / GridWorld. Politique ε-greedy avec décroissance d'ε.
+"""
+
 import random
 
 

@@ -1,7 +1,14 @@
+"""
+Évaluation générique d'un agent (Tabular Q ou autre) :
+joue n_episodes sans exploration (epsilon=0) et retourne reward, longueur
+et temps moyen par décision.
+"""
+
 import time
 
 
 def evaluate_agent(env, agent, n_episodes=100):
+    # Désactive l'exploration le temps de l'évaluation
     old_epsilon = agent.epsilon
     agent.epsilon = 0.0
 
@@ -14,6 +21,7 @@ def evaluate_agent(env, agent, n_episodes=100):
         done = False
         steps = 0
 
+        # Une partie : on joue jusqu'à la fin et on chronomètre la décision
         while not done:
             valid_actions = env.get_actions()
 
@@ -29,6 +37,7 @@ def evaluate_agent(env, agent, n_episodes=100):
 
         total_steps += steps
 
+    # Restaure l'epsilon initial pour ne pas perturber l'entraînement
     agent.epsilon = old_epsilon
 
     return {

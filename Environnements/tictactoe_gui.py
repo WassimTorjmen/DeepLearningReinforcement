@@ -1,6 +1,12 @@
+"""
+Interface graphique pygame : Humain (X) vs RandomAgent (O).
+Clic sur une case pour jouer, R pour reset.
+"""
+
 import os
 import sys
 
+# Ajoute la racine du projet au PYTHONPATH pour pouvoir importer Agents.*
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(project_root)
 
