@@ -116,10 +116,10 @@ if __name__ == "__main__":
     
     
 
-    run_experiment(
+   run_experiment(
         env=TicTacToe(), env_name="TicTacToe",
         train_fn=train_tictactoe, evaluate_fn=evaluate_tictactoe,
-        agent=REINFORCE.ReinforceAgent(27, 9),
-        agent_name="REINFORCE",
-        num_episodes=10_000, checkpoints=[1_000, 10_000],
-     )
+        agent=REINFORCE.ReinforceAgent(27, 9, lr=5e-4, hidden_size=128),  # ← changé
+        agent_name="REINFORCE_lr5e4_h128_100000",
+        num_episodes=100_000, checkpoints=[1_000, 10_000, 100_000]          
+    )
