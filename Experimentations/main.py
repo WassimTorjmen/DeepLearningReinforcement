@@ -1,9 +1,19 @@
+"""
+Point d'entrée des expériences : choisir un agent + un env et lancer un run_experiment.
+La plupart des appels sont commentés ; décommenter une section pour la lancer.
+Par défaut ce script entraîne MuZero sur les 4 environnements.
+"""
+
 import sys
 import os
 
+# Ajoute la racine + Agents/ + Environnements/ au PYTHONPATH
 base = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.join(base, "Agents"))
-sys.path.append(os.path.join(base, "Environnements"))
+project_root = os.path.dirname(base)
+sys.path.append(base)
+sys.path.append(project_root)
+sys.path.append(os.path.join(project_root, "Agents"))
+sys.path.append(os.path.join(project_root, "Environnements"))
 
 from experiment import (
     run_experiment,
@@ -19,10 +29,10 @@ from experiment import (
     train_alphazero_1player
 )
 
-from line_world import LineWorld
-from grid_world  import GridWorld
-from tictactoe   import TicTacToe
-from quarto      import QuartoEnv
+from Environnements.line_world import LineWorld
+from Environnements.grid_world  import GridWorld
+from Environnements.tictactoe   import TicTacToe
+from Environnements.quarto      import QuartoEnv
 
 import REINFORCE
 import Reinforce_mean_baseline

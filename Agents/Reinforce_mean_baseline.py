@@ -1,3 +1,8 @@
+"""
+REINFORCE avec baseline = moyenne empirique des retours de l'épisode.
+Réduit la variance du gradient sans réseau supplémentaire (contrairement au critic).
+"""
+
 import numpy as np
 import time
 import torch

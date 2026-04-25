@@ -1,3 +1,9 @@
+"""
+Random Rollout : agent de planification sans apprentissage.
+Pour chaque action légale, simule N parties aléatoires et choisit
+celle au meilleur score moyen (Monte-Carlo simple).
+"""
+
 import numpy as np
 import copy
 import time

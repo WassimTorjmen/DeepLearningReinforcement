@@ -1,7 +1,12 @@
+"""
+Entraîne un TabularQAgent sur LineWorld par Q-learning ε-greedy.
+Affiche des statistiques tous les 500 épisodes et la Q-table finale.
+"""
+
 import os
 import sys
 
-# Permet d'importer les modules du projet
+# Permet d'importer les modules du projet (racine ajoutée au PYTHONPATH)
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(project_root)
 

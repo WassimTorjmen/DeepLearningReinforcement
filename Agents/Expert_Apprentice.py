@@ -1,3 +1,9 @@
+"""
+Expert / Apprentice : un MCTS coûteux (l'Expert) joue et un réseau (l'Apprenti)
+apprend à imiter ses choix par classification supervisée (cross-entropy).
+À l'inférence, l'Apprenti joue seul → rapide.
+"""
+
 import numpy as np
 import copy
 import math

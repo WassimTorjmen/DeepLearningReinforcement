@@ -1,11 +1,27 @@
+"""
+Pipeline générique d'expérimentation pour tous les agents Policy/Value.
+
+Convention :
+    - evaluate_*           : éval avec accès direct à agent.policy (REINFORCE, PPO, ...)
+    - evaluate_no_training : éval via agent.select_action(env, ...) (Random Rollout, AlphaZero, MuZero)
+    - train_*              : entraînement classique (le réseau choisit l'action)
+    - train_alphazero_*    : entraînement où l'agent appelle agent.select_action_mcts(...)
+
+run_experiment() orchestre train + eval + plot + save.
+"""
+
 import numpy as np
 import time
 import torch
 import matplotlib.pyplot as plt
 
 
+# ════════════════════════════════════════════════════════════════════
+#  ÉVALUATIONS — agents avec attribut .policy (REINFORCE, PPO, ...)
+# ════════════════════════════════════════════════════════════════════
+
 def evaluate_1player(env, agent, n_games=500, max_steps=200):
-    """Évalue un agent sur un env 1 joueur avec limite de steps."""
+    """Évalue un agent sur un env 1 joueur (LineWorld/GridWorld) avec limite de steps."""
     scores, lengths, times = [], [], []
 
     for _ in range(n_games):
@@ -40,6 +56,7 @@ def evaluate_1player(env, agent, n_games=500, max_steps=200):
 
 
 def evaluate_tictactoe(env, agent, n_games=500):
+    """TicTacToe : l'agent (X) joue, puis l'adversaire random (O), jusqu'à la fin."""
     scores, lengths, times = [], [], []
 
     for _ in range(n_games):
@@ -80,6 +97,7 @@ def evaluate_tictactoe(env, agent, n_games=500):
 
 
 def evaluate_quarto(env, agent, n_games=500):
+    """Quarto : l'agent joue J1, un random joue J2."""
     scores, lengths, times = [], [], []
 
     for _ in range(n_games):
@@ -117,12 +135,18 @@ def evaluate_quarto(env, agent, n_games=500):
 
 
 def _parse_loss(loss_result):
+    """Normalise le retour de agent.learn() : peut être un float ou un tuple (policy, critic)."""
     if isinstance(loss_result, tuple):
         return loss_result[0], loss_result[1]
     return loss_result, None
 
 
+# ════════════════════════════════════════════════════════════════════
+#  ENTRAÎNEMENTS — boucles classiques (1 player / TicTacToe / Quarto)
+# ════════════════════════════════════════════════════════════════════
+
 def train_1player(env, agent, num_episodes, checkpoints, evaluate_fn, window=100, max_steps=200):
+    """Boucle d'entraînement pour LineWorld / GridWorld."""
     all_policy_losses, all_critic_losses, all_rewards, eval_results = [], [], [], {}
     checkpoints    = sorted(checkpoints)
     next_check_idx = 0
@@ -159,6 +183,7 @@ def train_1player(env, agent, num_episodes, checkpoints, evaluate_fn, window=100
 
 
 def train_tictactoe(env, agent, num_episodes, checkpoints, evaluate_fn, window=100):
+    """TicTacToe : l'agent joue X, alterne avec un random qui joue O."""
     all_policy_losses, all_critic_losses, all_rewards, eval_results = [], [], [], {}
     checkpoints    = sorted(checkpoints)
     next_check_idx = 0
@@ -202,6 +227,7 @@ def train_tictactoe(env, agent, num_episodes, checkpoints, evaluate_fn, window=1
 
 
 def train_quarto(env, agent, num_episodes, checkpoints, evaluate_fn, window=100):
+    """Quarto : l'agent joue J1, un random joue J2 ; on stocke les rewards seulement aux tours de l'agent."""
     all_policy_losses, all_critic_losses, all_rewards, eval_results = [], [], [], {}
     checkpoints    = sorted(checkpoints)
     next_check_idx = 0
@@ -247,6 +273,7 @@ def train_quarto(env, agent, num_episodes, checkpoints, evaluate_fn, window=100)
 
 
 def plot_results(all_rewards, all_policy_losses, all_critic_losses, env_name, agent_name, window=100):
+    """Trace 2 ou 3 sous-graphes : reward lissée, policy loss et (optionnel) critic loss."""
     smoothed = [
         np.mean(all_rewards[max(0, i - window):i + 1])
         for i in range(len(all_rewards))
@@ -277,6 +304,7 @@ def plot_results(all_rewards, all_policy_losses, all_critic_losses, env_name, ag
 
 
 def run_experiment(env, env_name, train_fn, evaluate_fn, agent, agent_name, num_episodes, checkpoints):
+    """Pipeline complet : train → eval aux checkpoints → graphique → sauvegarde du modèle."""
     print("=" * 65)
     print(f"  {agent_name}  —  {env_name}")
     print("=" * 65)
@@ -296,7 +324,13 @@ def run_experiment(env, env_name, train_fn, evaluate_fn, agent, agent_name, num_
     print(f"Modèle sauvegardé → {agent_name}_{env_name}.pt\n")
 
 
+# ════════════════════════════════════════════════════════════════════
+#  ÉVALUATIONS — agents sans .policy (RandomRollout, AlphaZero, MuZero)
+#  → on appelle agent.select_action(env, available)
+# ════════════════════════════════════════════════════════════════════
+
 def evaluate_no_training_1player(env, agent, n_games=500):
+    """Éval pour LineWorld/GridWorld via select_action(env, available)."""
     scores, lengths, times = [], [], []
     for _ in range(n_games):
         env.reset()
@@ -376,6 +410,7 @@ def evaluate_no_training_quarto(env, agent, n_games=500):
 
 
 def run_experiment_no_training(env, env_name, evaluate_fn, agent, agent_name, n_games=500):
+    """Variante de run_experiment pour les agents sans phase d'entraînement (RandomRollout)."""
     print("=" * 65)
     print(f"  {agent_name}  —  {env_name}")
     print("=" * 65)
@@ -390,7 +425,12 @@ def run_experiment_no_training(env, env_name, evaluate_fn, agent, agent_name, n_
     print()
 
 
+# ════════════════════════════════════════════════════════════════════
+#  ENTRAÎNEMENTS AlphaZero / MuZero (utilisent select_action_mcts)
+# ════════════════════════════════════════════════════════════════════
+
 def train_alphazero_1player(env, agent, num_episodes, checkpoints, evaluate_fn, window=100, max_steps=200):
+    """Boucle AlphaZero/MuZero pour LineWorld / GridWorld."""
     all_policy_losses, all_critic_losses, all_rewards, eval_results = [], [], [], {}
     checkpoints    = sorted(checkpoints)
     next_check_idx = 0
@@ -425,6 +465,7 @@ def train_alphazero_1player(env, agent, num_episodes, checkpoints, evaluate_fn, 
 
 
 def train_alphazero_tictactoe(env, agent, num_episodes, checkpoints, evaluate_fn, window=100):
+    """Variante TicTacToe : agent (X) joue par MCTS, random joue O."""
     all_policy_losses, all_critic_losses, all_rewards, eval_results = [], [], [], {}
     checkpoints    = sorted(checkpoints)
     next_check_idx = 0
@@ -463,6 +504,7 @@ def train_alphazero_tictactoe(env, agent, num_episodes, checkpoints, evaluate_fn
 
 
 def train_alphazero_quarto(env, agent, num_episodes, checkpoints, evaluate_fn, window=100):
+    """Variante Quarto : agent (J1) joue par MCTS, random joue J2."""
     all_policy_losses, all_critic_losses, all_rewards, eval_results = [], [], [], {}
     checkpoints    = sorted(checkpoints)
     next_check_idx = 0

@@ -1,3 +1,10 @@
+"""
+MCTS (Monte Carlo Tree Search) avec UCT.
+Construit un arbre de recherche : à chaque décision, fait n_simulations
+itérations Sélection → Expansion → Simulation → Backpropagation.
+Plus efficace que Random Rollout car réutilise les résultats passés.
+"""
+
 import numpy as np
 import copy
 import math

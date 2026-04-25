@@ -1,3 +1,9 @@
+"""
+DQN (Deep Q-Network) : approximation de la Q-fonction par un MLP.
+Apprentissage en ligne par minimisation de l'erreur de Bellman, politique ε-greedy.
+Version simple sans replay buffer ni target network (voir ddqn.py pour le target).
+"""
+
 import numpy as np
 import torch
 import torch.nn as nn

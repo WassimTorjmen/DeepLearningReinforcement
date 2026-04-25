@@ -1,3 +1,9 @@
+"""
+PPO (Proximal Policy Optimization) version A2C-style.
+Comme REINFORCE-Critic, mais ajoute un ratio π_new/π_old clippé dans [1-ε, 1+ε]
+pour limiter les pas de politique trop grands (stabilité du training).
+"""
+
 import numpy as np
 import torch
 import torch.nn as nn

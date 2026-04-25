@@ -1,3 +1,10 @@
+"""
+REINFORCE classique (policy gradient Monte-Carlo).
+La politique apprend à monter la log-probabilité des actions des trajectoires
+qui ont rapporté un retour G_t élevé (normalisé).
+Inclut aussi des fonctions train/evaluate/plot utilitaires.
+"""
+
 import numpy as np
 import time
 import torch
@@ -7,6 +14,7 @@ import matplotlib.pyplot as plt
 
 
 class PolicyNetwork(nn.Module):
+    """MLP qui produit une distribution de probabilités sur les actions."""
     def __init__(self, state_size, num_actions, hidden_size=64):
         super().__init__()
         self.net = nn.Sequential(
@@ -15,7 +23,7 @@ class PolicyNetwork(nn.Module):
             nn.Linear(hidden_size, hidden_size),
             nn.ReLU(),
             nn.Linear(hidden_size, num_actions),
-            nn.Softmax(dim=-1)
+            nn.Softmax(dim=-1)   # sortie = proba sur chaque action
         )
 
     def forward(self, x):
@@ -29,6 +37,7 @@ class ReinforceAgent:
         self.device          = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.policy          = PolicyNetwork(state_size, num_actions, hidden_size).to(self.device)
         self.optimizer       = optim.Adam(self.policy.parameters(), lr=lr)
+        # Buffers de l'épisode courant (vidés après chaque learn())
         self.saved_log_probs = []
         self.rewards         = []
 
@@ -39,6 +48,7 @@ class ReinforceAgent:
                 nn.init.zeros_(layer.bias)
 
     def select_action(self, state, available_actions):
+        """Échantillonne une action selon la politique, en masquant les actions illégales."""
         # vérifie que l'état ne contient pas de nan
         state_array = np.array(state, dtype=np.float32)
         if np.isnan(state_array).any():
@@ -62,25 +72,30 @@ class ReinforceAgent:
             self.saved_log_probs.append(torch.tensor(0.0, requires_grad=True))
             return action
 
+        # Masque les actions invalides puis renormalise
         mask  = torch.zeros(self.num_actions)
         mask[available_actions] = 1.0
         probs = probs * mask
         probs = probs / (probs.sum() + 1e-8)
 
+        # Échantillonne et garde le log π(a|s) pour le calcul du gradient
         dist   = torch.distributions.Categorical(probs)
         action = dist.sample()
         self.saved_log_probs.append(dist.log_prob(action))
         return int(action.item())
 
     def store_reward(self, reward):
+        # Mémorise la récompense reçue (1 par step)
         self.rewards.append(reward)
 
     def learn(self):
+        """Met à jour la politique en fin d'épisode : ∇θ J = E[ ∑ G_t ∇log π(a_t|s_t) ]."""
         if len(self.saved_log_probs) == 0 or len(self.rewards) != len(self.saved_log_probs):
             self.saved_log_probs = []
             self.rewards         = []
             return 0.0
 
+        # Calcul des retours actualisés G_t à rebours
         G       = 0
         returns = []
         for r in reversed(self.rewards):
@@ -89,9 +104,11 @@ class ReinforceAgent:
 
         returns = torch.FloatTensor(returns).to(self.device)
 
+        # Normalisation pour réduire la variance du gradient
         if len(returns) > 1:
             returns = (returns - returns.mean()) / (returns.std() + 1e-8)
 
+        # Loss = -∑ log π(a_t|s_t) * G_t  (montée de gradient → descente de la loss)
         loss = torch.stack(
             [-lp * G_t for lp, G_t in zip(self.saved_log_probs, returns)]
         ).sum()
@@ -120,6 +137,7 @@ class ReinforceAgent:
 
 
 def evaluate(env, agent, n_games=500):
+    """Évalue la politique sans exploration (argmax) sur n_games parties."""
     scores, lengths, times = [], [], []
 
     for _ in range(n_games):
@@ -157,6 +175,7 @@ def evaluate(env, agent, n_games=500):
 
 
 def train_and_collect(env, agent, num_episodes, checkpoints, window=100):
+    """Boucle d'entraînement : joue num_episodes parties et évalue aux checkpoints."""
     all_losses     = []
     all_rewards    = []
     eval_results   = {}
@@ -195,6 +214,7 @@ def train_and_collect(env, agent, num_episodes, checkpoints, window=100):
 
 
 def plot_results(all_rewards, all_losses, env_name, agent_name, window=100):
+    """Sauvegarde un PNG avec la courbe de reward (lissée) et la courbe de loss."""
     smoothed = [
         np.mean(all_rewards[max(0, i - window):i + 1])
         for i in range(len(all_rewards))

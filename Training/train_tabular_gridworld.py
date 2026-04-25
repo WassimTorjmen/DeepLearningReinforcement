@@ -1,7 +1,12 @@
+"""
+Entraîne un TabularQAgent sur GridWorld 5x5 par Q-learning ε-greedy.
+Identique à train_tabular_lineworld mais sur la version 2D.
+"""
+
 import os
 import sys
 
-# Permet d'importer les modules du projet
+# Permet d'importer les modules du projet (racine ajoutée au PYTHONPATH)
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(project_root)
 

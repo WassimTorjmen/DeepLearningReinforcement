@@ -1,3 +1,9 @@
+"""
+Double DQN : corrige la surestimation de DQN.
+Le réseau principal CHOISIT l'action, le réseau cible (figé) l'ÉVALUE.
+Le target network est resynchronisé toutes les target_update_every steps.
+"""
+
 import numpy as np
 import torch
 import torch.nn as nn

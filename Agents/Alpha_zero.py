@@ -1,3 +1,10 @@
+"""
+AlphaZero (version simplifiée).
+Un seul réseau à deux têtes (policy + value) guide MCTS via PUCT.
+Self-play : l'agent joue contre lui-même, MCTS génère π améliorée,
+le réseau apprend à prédire (π, résultat de la partie).
+"""
+
 import numpy as np
 import copy
 import math
@@ -7,6 +14,7 @@ import torch.optim as optim
 
 
 class AlphaZeroNetwork(nn.Module):
+    """Réseau à deux têtes : policy (proba sur actions) + value V(s) ∈ [-1,1]."""
     def __init__(self, state_size, num_actions, hidden_size=128):
         super().__init__()
         self.trunk = nn.Sequential(
@@ -32,6 +40,7 @@ class AlphaZeroNetwork(nn.Module):
 
 
 class AlphaZeroNode:
+    """Noeud MCTS avec, en plus du standard, une probabilité a priori (du réseau)."""
     def __init__(self, action=None, parent=None, prior=0.0):
         self.action   = action
         self.parent   = parent
@@ -44,6 +53,8 @@ class AlphaZeroNode:
         return len(self.children) == len(available_actions)
 
     def puct_score(self, c=1.0):
+        # PUCT = Q(s,a) + c * P(s,a) * sqrt(N_parent) / (1 + N_enfant)
+        # Q : exploitation, U : exploration pondérée par la proba a priori du réseau
         if self.visits == 0:
             q = 0.0
         else:
@@ -81,6 +92,7 @@ class AlphaZeroAgent:
         self.rewards_buffer = []
 
     def _get_policy_value(self, env, available_actions):
+        # Évalue (policy, value) du réseau pour l'état courant et masque les actions illégales
         state   = env.encode_state()
         state_t = torch.FloatTensor(state).unsqueeze(0).to(self.device)
         with torch.no_grad():
@@ -96,6 +108,7 @@ class AlphaZeroAgent:
         return policy, value.item()
 
     def _mcts(self, env, available_actions):
+        # Lance n_simulations descentes PUCT et retourne la distribution π = visites normalisées
         root   = AlphaZeroNode()
         policy, _ = self._get_policy_value(env, available_actions)
         for action in available_actions:
@@ -166,10 +179,12 @@ class AlphaZeroAgent:
         return action
 
     def store_reward(self, reward):
+        # Tous les états de la partie reçoivent le résultat final comme cible de valeur
         n = len(self.states_buffer) - len(self.rewards_buffer)
         self.rewards_buffer.extend([reward] * n)
 
     def learn(self):
+        # Loss = cross-entropy(policy_pred, π_mcts) + MSE(value_pred, résultat final)
         if not self.states_buffer or len(self.states_buffer) != len(self.rewards_buffer):
             self.states_buffer  = []
             self.pi_buffer      = []

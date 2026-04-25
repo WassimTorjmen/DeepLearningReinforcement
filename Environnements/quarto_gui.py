@@ -1,7 +1,15 @@
+"""
+Interface graphique pygame : Humain (J1) vs RandomAgent (J2) sur Quarto.
+- Phase CHOOSE : cliquer sur une pièce du panneau de droite pour la donner à l'IA.
+- Phase PLACE  : cliquer sur une case du plateau pour y poser la pièce reçue.
+- R : reset la partie. L'IA joue avec un délai pour la lisibilité.
+"""
+
 import os
 import sys
 import pygame
 
+# Permet d'importer Agents.* depuis la racine du projet
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(project_root)
 
@@ -70,10 +78,11 @@ last_ai_time = 0
 # HELPERS
 # =========================
 def draw_piece(piece, x, y, size):
-    color  = WHITE if (piece & 1) == 0 else BLACK
-    shape  = (piece >> 1) & 1
-    filled = (piece >> 2) & 1
-    big    = (piece >> 3) & 1
+    # Décode les 4 attributs binaires de la pièce et la dessine
+    color  = WHITE if (piece & 1) == 0 else BLACK   # bit 0 : couleur
+    shape  = (piece >> 1) & 1                        # bit 1 : forme (rond/carré)
+    filled = (piece >> 2) & 1                        # bit 2 : plein/creux
+    big    = (piece >> 3) & 1                        # bit 3 : grand/petit
 
     cx = x + size // 2
     cy = y + size // 2

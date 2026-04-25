@@ -1,3 +1,9 @@
+"""
+REINFORCE with Learned Baseline (Actor-Critic basique).
+Un Critic apprend V(s) ; l'avantage A_t = G_t - V(s_t) sert de baseline,
+ce qui réduit nettement la variance par rapport au REINFORCE classique.
+"""
+
 import numpy as np
 import torch
 import torch.nn as nn
