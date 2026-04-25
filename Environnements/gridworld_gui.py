@@ -24,6 +24,15 @@ pygame.display.set_caption("GridWorld")
 # on crée une variable de controle 
 running = True
 
+
+def play_action(action):
+    _, reward, done = env.step(action)
+    if done:
+        if reward == 1:
+            print("Partie gagnee !")
+        elif reward == -1:
+            print("Partie perdue !")
+
 while running:
     screen.fill((30, 30, 30))
 
@@ -39,25 +48,26 @@ while running:
             # Reset avec R
             if event.key == pygame.K_r:
                 env.reset()
-
+                print("Nouvelle partie !")
+                
             # Si la partie n'est pas finie
             if not env.done:
 
                 # si je clique sur la flèche haut et que l'action haut = 0 est autorisé bah j'applique l'action 0
                 if event.key == pygame.K_UP and 0 in env.get_actions():
-                    env.step(0)
+                    play_action(0)
 
                 # si je clique sur la flèche bas et que l'action est autorisé bah j'applique l'action 1
                 elif event.key == pygame.K_DOWN and 1 in env.get_actions():
-                    env.step(1)
+                    play_action(1)
 
                 # GAUCHE
                 elif event.key == pygame.K_LEFT and 2 in env.get_actions():
-                    env.step(2)
+                    play_action(2)
 
                 # DROITE
                 elif event.key == pygame.K_RIGHT and 3 in env.get_actions():
-                    env.step(3)
+                    play_action(3)
 
     # Taille des cases
     cell_width = width // env.cols
@@ -79,6 +89,10 @@ while running:
             # Objectif
             if (row, col) == env.goal_position:
                 color = (0, 255, 0)
+
+            # Piège
+            if (row, col) == env.trap_position:
+                color = (255, 0, 0)
 
             # Agent
             if (row, col) == env.agent_position:
