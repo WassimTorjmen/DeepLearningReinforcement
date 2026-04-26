@@ -111,6 +111,45 @@ def _parse_loss(loss_result):
     return loss_result, None
 
 
+def _safe_mean(seq, window=None):
+    if not seq:
+        return float("nan")
+    if window is not None:
+        seq = seq[-window:]
+    return float(np.mean(seq))
+
+
+def _print_train_header(has_critic=True, has_epsilon=False):
+    cols = [f"{'Épisodes':>12}", f"{'Reward moy':>12}", f"{'Policy loss':>13}"]
+    if has_critic:
+        cols.append(f"{'Critic loss':>13}")
+    if has_epsilon:
+        cols.append(f"{'ε':>6}")
+    line = " | ".join(cols)
+    print("=" * len(line))
+    print("  ENTRAÎNEMENT  (moyennes glissantes sur les 100 derniers épisodes)")
+    print("=" * len(line))
+    print(line)
+    print("-" * len(line))
+
+
+def _print_train_progress(episode, all_rewards, all_policy_losses, all_critic_losses,
+                          window=100, prefix=None, extra=None, epsilon=None):
+    r  = _safe_mean(all_rewards, window)
+    pl = _safe_mean(all_policy_losses, window)
+    cols = [f"{episode:>12,}", f"{r:>12.4f}", f"{pl:>13.4f}"]
+    if all_critic_losses:
+        cl = _safe_mean(all_critic_losses, window)
+        cols.append(f"{cl:>13.4f}")
+    if epsilon is not None:
+        cols.append(f"{epsilon:>6.3f}")
+    print(" | ".join(cols))
+
+
+def _print_eval_metrics(*args, **kwargs):
+    pass
+
+
 def train_1player(env, agent, num_episodes, checkpoints, evaluate_fn, window=100, max_steps=200):
     all_policy_losses, all_critic_losses, all_rewards, eval_results = [], [], [], {}
     checkpoints    = sorted(checkpoints)
@@ -134,10 +173,10 @@ def train_1player(env, agent, num_episodes, checkpoints, evaluate_fn, window=100
             all_critic_losses.append(critic_loss)
         all_rewards.append(episode_reward)
         if next_check_idx < len(checkpoints) and episode == checkpoints[next_check_idx]:
+            _print_train_progress(episode, all_rewards, all_policy_losses, all_critic_losses,
+                                  window=window)
             metrics = evaluate_fn(env, agent)
             eval_results[episode] = metrics
-            print(f"  {episode:>9,} épisodes | Score : {metrics['score_moyen']:.4f} | "
-                  f"Longueur : {metrics['longueur_moy']:.2f} | Temps/coup : {metrics['temps_coup_ms']:.4f} ms")
             next_check_idx += 1
     return all_rewards, all_policy_losses, all_critic_losses, eval_results
 
@@ -172,10 +211,10 @@ def train_tictactoe(env, agent, num_episodes, checkpoints, evaluate_fn, window=1
             all_critic_losses.append(critic_loss)
         all_rewards.append(episode_reward)
         if next_check_idx < len(checkpoints) and episode == checkpoints[next_check_idx]:
+            _print_train_progress(episode, all_rewards, all_policy_losses, all_critic_losses,
+                                  window=window)
             metrics = evaluate_fn(env, agent)
             eval_results[episode] = metrics
-            print(f"  {episode:>9,} épisodes | Score : {metrics['score_moyen']:.4f} | "
-                  f"Longueur : {metrics['longueur_moy']:.2f} | Temps/coup : {metrics['temps_coup_ms']:.4f} ms")
             next_check_idx += 1
     return all_rewards, all_policy_losses, all_critic_losses, eval_results
 
@@ -212,10 +251,10 @@ def train_quarto(env, agent, num_episodes, checkpoints, evaluate_fn, window=100)
             all_critic_losses.append(critic_loss)
         all_rewards.append(episode_reward)
         if next_check_idx < len(checkpoints) and episode == checkpoints[next_check_idx]:
+            _print_train_progress(episode, all_rewards, all_policy_losses, all_critic_losses,
+                                  window=window)
             metrics = evaluate_fn(env, agent)
             eval_results[episode] = metrics
-            print(f"  {episode:>9,} épisodes | Score : {metrics['score_moyen']:.4f} | "
-                  f"Longueur : {metrics['longueur_moy']:.2f} | Temps/coup : {metrics['temps_coup_ms']:.4f} ms")
             next_check_idx += 1
     return all_rewards, all_policy_losses, all_critic_losses, eval_results
 
@@ -251,6 +290,7 @@ def run_experiment(env, env_name, train_fn, evaluate_fn, agent, agent_name, num_
     print("=" * 65)
     print(f"  {agent_name}  —  {env_name}")
     print("=" * 65)
+    _print_train_header(has_critic=True, has_epsilon=False)
     all_rewards, all_policy_losses, all_critic_losses, eval_results = train_fn(
         env, agent, num_episodes, checkpoints, evaluate_fn
     )
@@ -386,10 +426,10 @@ def train_alphazero_1player(env, agent, num_episodes, checkpoints, evaluate_fn, 
             all_critic_losses.append(critic_loss)
         all_rewards.append(episode_reward)
         if next_check_idx < len(checkpoints) and episode == checkpoints[next_check_idx]:
+            _print_train_progress(episode, all_rewards, all_policy_losses, all_critic_losses,
+                                  window=window)
             metrics = evaluate_fn(env, agent)
             eval_results[episode] = metrics
-            print(f"  {episode:>9,} épisodes | Score : {metrics['score_moyen']:.4f} | "
-                  f"Longueur : {metrics['longueur_moy']:.2f} | Temps/coup : {metrics['temps_coup_ms']:.4f} ms")
             next_check_idx += 1
     return all_rewards, all_policy_losses, all_critic_losses, eval_results
 
@@ -419,10 +459,10 @@ def train_alphazero_tictactoe(env, agent, num_episodes, checkpoints, evaluate_fn
             all_critic_losses.append(critic_loss)
         all_rewards.append(episode_reward)
         if next_check_idx < len(checkpoints) and episode == checkpoints[next_check_idx]:
+            _print_train_progress(episode, all_rewards, all_policy_losses, all_critic_losses,
+                                  window=window)
             metrics = evaluate_fn(env, agent)
             eval_results[episode] = metrics
-            print(f"  {episode:>9,} épisodes | Score : {metrics['score_moyen']:.4f} | "
-                  f"Longueur : {metrics['longueur_moy']:.2f} | Temps/coup : {metrics['temps_coup_ms']:.4f} ms")
             next_check_idx += 1
     return all_rewards, all_policy_losses, all_critic_losses, eval_results
 
@@ -451,10 +491,10 @@ def train_alphazero_quarto(env, agent, num_episodes, checkpoints, evaluate_fn, w
             all_critic_losses.append(critic_loss)
         all_rewards.append(episode_reward)
         if next_check_idx < len(checkpoints) and episode == checkpoints[next_check_idx]:
+            _print_train_progress(episode, all_rewards, all_policy_losses, all_critic_losses,
+                                  window=window)
             metrics = evaluate_fn(env, agent)
             eval_results[episode] = metrics
-            print(f"  {episode:>9,} épisodes | Score : {metrics['score_moyen']:.4f} | "
-                  f"Longueur : {metrics['longueur_moy']:.2f} | Temps/coup : {metrics['temps_coup_ms']:.4f} ms")
             next_check_idx += 1
     return all_rewards, all_policy_losses, all_critic_losses, eval_results
 
@@ -610,10 +650,10 @@ def train_dqn_1player(env, agent, num_episodes, checkpoints, evaluate_fn, max_st
         all_losses.append(episode_loss / max(steps, 1))
         all_rewards.append(episode_reward)
         if next_check_idx < len(checkpoints) and episode == checkpoints[next_check_idx]:
+            _print_train_progress(episode, all_rewards, all_losses, [],
+                                  window=100, epsilon=agent.epsilon)
             metrics = evaluate_fn(env, agent)
             eval_results[episode] = metrics
-            print(f"  {episode:>9,} épisodes | Score : {metrics['score_moyen']:.4f} | "
-                  f"Longueur : {metrics['longueur_moy']:.2f} | ε : {agent.epsilon:.3f}")
             next_check_idx += 1
     return all_rewards, all_losses, [], eval_results
 
@@ -673,10 +713,10 @@ def train_dqn_tictactoe(env, agent, num_episodes, checkpoints, evaluate_fn):
         all_losses.append(episode_loss / max(steps, 1))
         all_rewards.append(episode_reward)
         if next_check_idx < len(checkpoints) and episode == checkpoints[next_check_idx]:
+            _print_train_progress(episode, all_rewards, all_losses, [],
+                                  window=100, epsilon=agent.epsilon)
             metrics = evaluate_fn(env, agent)
             eval_results[episode] = metrics
-            print(f"  {episode:>9,} épisodes | Score : {metrics['score_moyen']:.4f} | "
-                  f"Longueur : {metrics['longueur_moy']:.2f} | ε : {agent.epsilon:.3f}")
             next_check_idx += 1
     return all_rewards, all_losses, [], eval_results
 
@@ -729,10 +769,10 @@ def train_dqn_quarto(env, agent, num_episodes, checkpoints, evaluate_fn):
         all_losses.append(episode_loss / max(steps, 1))
         all_rewards.append(episode_reward)
         if next_check_idx < len(checkpoints) and episode == checkpoints[next_check_idx]:
+            _print_train_progress(episode, all_rewards, all_losses, [],
+                                  window=100, epsilon=agent.epsilon)
             metrics = evaluate_fn(env, agent)
             eval_results[episode] = metrics
-            print(f"  {episode:>9,} épisodes | Score : {metrics['score_moyen']:.4f} | "
-                  f"Longueur : {metrics['longueur_moy']:.2f} | ε : {agent.epsilon:.3f}")
             next_check_idx += 1
     return all_rewards, all_losses, [], eval_results
 
@@ -741,6 +781,7 @@ def run_experiment_dqn(env, env_name, train_fn, evaluate_fn, agent, agent_name, 
     print("=" * 65)
     print(f"  {agent_name}  —  {env_name}")
     print("=" * 65)
+    _print_train_header(has_critic=False, has_epsilon=True)
     all_rewards, all_losses, _, eval_results = train_fn(
         env, agent, num_episodes, checkpoints, evaluate_fn
     )
@@ -800,10 +841,10 @@ def train_ddqn_er_1player(env, agent, num_episodes, checkpoints, evaluate_fn, ma
         all_losses.append(episode_loss / max(steps, 1))
         all_rewards.append(episode_reward)
         if next_check_idx < len(checkpoints) and episode == checkpoints[next_check_idx]:
+            _print_train_progress(episode, all_rewards, all_losses, [],
+                                  window=100, epsilon=agent.epsilon)
             metrics = evaluate_fn(env, agent)
             eval_results[episode] = metrics
-            print(f"  {episode:>9,} épisodes | Score : {metrics['score_moyen']:.4f} | "
-                  f"Longueur : {metrics['longueur_moy']:.2f} | ε : {agent.epsilon:.3f}")
             next_check_idx += 1
     return all_rewards, all_losses, [], eval_results
 
@@ -841,10 +882,10 @@ def train_ddqn_er_tictactoe(env, agent, num_episodes, checkpoints, evaluate_fn):
         all_losses.append(episode_loss / max(steps, 1))
         all_rewards.append(episode_reward)
         if next_check_idx < len(checkpoints) and episode == checkpoints[next_check_idx]:
+            _print_train_progress(episode, all_rewards, all_losses, [],
+                                  window=100, epsilon=agent.epsilon)
             metrics = evaluate_fn(env, agent)
             eval_results[episode] = metrics
-            print(f"  {episode:>9,} épisodes | Score : {metrics['score_moyen']:.4f} | "
-                  f"Longueur : {metrics['longueur_moy']:.2f} | ε : {agent.epsilon:.3f}")
             next_check_idx += 1
     return all_rewards, all_losses, [], eval_results
 
@@ -877,9 +918,9 @@ def train_ddqn_er_quarto(env, agent, num_episodes, checkpoints, evaluate_fn):
         all_losses.append(episode_loss / max(steps, 1))
         all_rewards.append(episode_reward)
         if next_check_idx < len(checkpoints) and episode == checkpoints[next_check_idx]:
+            _print_train_progress(episode, all_rewards, all_losses, [],
+                                  window=100, epsilon=agent.epsilon)
             metrics = evaluate_fn(env, agent)
             eval_results[episode] = metrics
-            print(f"  {episode:>9,} épisodes | Score : {metrics['score_moyen']:.4f} | "
-                  f"Longueur : {metrics['longueur_moy']:.2f} | ε : {agent.epsilon:.3f}")
             next_check_idx += 1
     return all_rewards, all_losses, [], eval_results
