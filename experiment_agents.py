@@ -164,9 +164,9 @@ AGENT_CONFIGS = {
         "no_training":  False,
         "train_mode":   "alphazero",
         "fn": lambda s, a, env_key: MuZeroAgent(
-            state_size=s, num_actions=a, hidden_size=128, n_simulations=10, lr=1e-3
+            state_size=s, num_actions=a, hidden_size=128, n_simulations=3, lr=1e-3
         ),
-        "hyperparams": {"hidden_size": 128, "lr": 1e-3, "n_simulations": 10},
+        "hyperparams": {"hidden_size": 128, "lr": 1e-3, "n_simulations": 3},
     },
     "muzero_stochastic": {
         "label":        "MuZeroStochastic",

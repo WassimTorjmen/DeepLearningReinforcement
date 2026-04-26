@@ -1,25 +1,25 @@
 # Rapport d'expérimentation — Tous agents
 
-> Épisodes d'entraînement : 1
+> Épisodes d'entraînement : 5,000
 
 
 ## Agents étudiés
 
 | Agent | Type | Hyperparamètres principaux |
 |---|---|---|
-| MCTS_UCT | Sans entraînement | n_simulations=100 |
+| AlphaZero | Alphazero | hidden_size=256, n_simulations=30, c_puct=1.5, lr=0.001 |
 
 ## Score moyen par agent × environnement (dernier checkpoint)
 
 | Agent | LineWorld | GridWorld (5×5) | TicTacToe (vs Random) | Quarto (vs Random) |
 |---|---|---|---|---|
-| MCTS_UCT | N/A | N/A | N/A | 0.8680 |
+| AlphaZero | N/A | N/A | N/A | 0.2160 |
 
 ## Temps moyen par coup (ms) — dernier checkpoint
 
 | Agent | LineWorld | GridWorld (5×5) | TicTacToe (vs Random) | Quarto (vs Random) |
 |---|---|---|---|---|
-| MCTS_UCT | N/A | N/A | N/A | 50.0438 |
+| AlphaZero | N/A | N/A | N/A | 1.1443 |
 
 ## Résultats détaillés par environnement
 
@@ -39,8 +39,16 @@
 
 | Agent | Épisodes | Score moyen | Longueur moy | Temps/coup (ms) |
 |---|---|---|---|---|
-| MCTS_UCT | 1 | 0.8680 | 17.73 | 50.0438 |
+| AlphaZero | 1,000 | 0.3020 | 21.78 | 0.4872 |
+| AlphaZero | 5,000 | 0.2160 | 22.45 | 1.1443 |
 
+
+## AlphaZero — Réseau seul vs MCTS
+
+| Environnement | Mode | Score | Victoires | Nuls | Défaites | Longueur | ms/coup |
+|---|---|---|---|---|---|---|---|
+| Quarto (vs Random) | Réseau | 0.2400 | 61.2% | 1.6% | 37.2% | 21.70 | 1.4505 |
+| Quarto (vs Random) | MCTS | 0.3550 | 66.5% | 2.5% | 31.0% | 22.14 | 35.3837 |
 
 ## Observations et interprétations
 
