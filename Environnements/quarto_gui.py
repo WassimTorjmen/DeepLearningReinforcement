@@ -19,7 +19,7 @@ pygame.init()
 # ── Chargement du modèle ──────────────────────────────────────
 # Le .pt est dans Experimentations/models/ppo_a2c/
 agent_rl   = PPOAgent(105, 32, hidden_size=128)
-MODEL_PATH = os.path.join(project_root, "models", "ppo_a2c", "PPO_A2C_Quarto.pt")
+MODEL_PATH = os.path.join(project_root, "Experimentations", "models", "ppo_a2c", "PPO_A2C_Quarto.pt")
 if os.path.exists(MODEL_PATH):
     agent_rl.load(MODEL_PATH)
     print("✓ Modèle chargé :", MODEL_PATH)
@@ -70,7 +70,7 @@ def agent_rl_action():
     state_t   = torch.FloatTensor(state).unsqueeze(0).to(agent_rl.device)
     with torch.no_grad():
         probs = agent_rl.policy(state_t).squeeze(0)
-    mask = torch.zeros(32).to(agent_rl.device)
+    mask = torch.zeros(32, device=agent_rl.device)
     for a in available:
         mask[a] = 1.0
     probs = probs * mask
@@ -275,7 +275,7 @@ while running:
             if env.done or env.current_player == 1:
                 pending_ai = False
         elif MODE == 3 and env.current_player == 2:
-            env.step(agent_random.Choisir_action(env))
+            env.step(agent_random.select_action(env))
             last_ai_time = now
             if env.done or env.current_player == 1:
                 pending_ai = False
@@ -283,7 +283,7 @@ while running:
             if env.current_player == 1:
                 env.step(agent_rl_action())
             else:
-                env.step(agent_random.Choisir_action(env))
+                env.step(agent_random.select_action(env))
             last_ai_time = now
             if env.done:
                 pending_ai = False

@@ -1,0 +1,86 @@
+{
+  "agent": "TabularQ",
+  "env": "LineWorld",
+  "num_episodes": 10000,
+  "elapsed_s": 0.5,
+  "hyperparams": {
+    "alpha": 0.1,
+    "gamma": 0.99,
+    "epsilon": 1.0,
+    "epsilon_decay": 0.999,
+    "epsilon_min": 0.05
+  },
+  "hp_search": [
+    {
+      "label": "\u03b1=0.1  \u03b5_decay=0.999",
+      "hp": {
+        "alpha": 0.1,
+        "gamma": 0.99,
+        "epsilon": 1.0,
+        "epsilon_decay": 0.999,
+        "epsilon_min": 0.05
+      },
+      "score_final": 1.0,
+      "q_size": 5
+    },
+    {
+      "label": "\u03b1=0.3  \u03b5_decay=0.999",
+      "hp": {
+        "alpha": 0.3,
+        "gamma": 0.99,
+        "epsilon": 1.0,
+        "epsilon_decay": 0.999,
+        "epsilon_min": 0.05
+      },
+      "score_final": 1.0,
+      "q_size": 5
+    },
+    {
+      "label": "\u03b1=0.5  \u03b5_decay=0.999",
+      "hp": {
+        "alpha": 0.5,
+        "gamma": 0.99,
+        "epsilon": 1.0,
+        "epsilon_decay": 0.999,
+        "epsilon_min": 0.05
+      },
+      "score_final": 1.0,
+      "q_size": 5
+    },
+    {
+      "label": "\u03b1=0.3  \u03b5_decay=0.995",
+      "hp": {
+        "alpha": 0.3,
+        "gamma": 0.99,
+        "epsilon": 1.0,
+        "epsilon_decay": 0.995,
+        "epsilon_min": 0.05
+      },
+      "score_final": 1.0,
+      "q_size": 5
+    }
+  ],
+  "checkpoints": {
+    "1000": {
+      "score_moyen": 1.0,
+      "longueur_moy": 5.0,
+      "temps_coup_ms": 0.0013
+    }
+  },
+  "final_eval": {
+    "score_moyen": 1.0,
+    "longueur_moy": 5.23,
+    "temps_coup_ms": 0.0012,
+    "taux_succes": 1.0,
+    "taux_echec": 0.0,
+    "n_games": 500
+  },
+  "q_table_stats": {
+    "n_etats": 5,
+    "n_entries": 9,
+    "q_max": 1.0,
+    "q_min": 0.951,
+    "q_mean": 0.9737,
+    "q_std": 0.0146
+  }
+}

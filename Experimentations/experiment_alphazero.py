@@ -26,6 +26,12 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
+base = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(base)
+sys.path.append(project_root)
+sys.path.append(os.path.join(project_root, "Agents"))
+sys.path.append(os.path.join(project_root, "Environnements"))
+
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from Environnements.line_world import LineWorld

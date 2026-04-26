@@ -1,0 +1,46 @@
+{
+  "agent": "AlphaZero",
+  "env": "TicTacToe (vs Random)",
+  "num_episodes": 5000,
+  "elapsed_s": 56.4,
+  "hyperparams": {
+    "hidden_size": 128,
+    "n_simulations": 50,
+    "c_puct": 1.5,
+    "lr": 0.001,
+    "state_size": 27,
+    "num_actions": 9
+  },
+  "checkpoints": {
+    "1000": {
+      "score_moyen": 0.888,
+      "longueur_moy": 5.93,
+      "temps_coup_ms": 0.1503
+    },
+    "5000": {
+      "score_moyen": 0.906,
+      "longueur_moy": 5.73,
+      "temps_coup_ms": 0.1485
+    }
+  },
+  "final_eval": {
+    "score_moyen": 0.95,
+    "longueur_moy": 5.88,
+    "temps_coup_ms": 0.2079,
+    "taux_victoire": 0.97,
+    "taux_nul": 0.01,
+    "taux_defaite": 0.02,
+    "n_games": 100,
+    "mode": "network"
+  },
+  "final_eval_mcts": {
+    "score_moyen": 0.95,
+    "longueur_moy": 5.8,
+    "temps_coup_ms": 2.4939,
+    "taux_victoire": 0.97,
+    "taux_nul": 0.01,
+    "taux_defaite": 0.02,
+    "n_games": 100,
+    "mode": "mcts"
+  }
+}

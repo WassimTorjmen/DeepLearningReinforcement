@@ -150,7 +150,7 @@ class AlphaZeroAgent:
         with torch.no_grad():
             policy, _ = self.network(state_t)
         policy = policy.squeeze(0)
-        mask   = torch.zeros(self.num_actions)
+        mask   = torch.zeros(self.num_actions, device=self.device)
         mask[available_actions] = 1.0
         policy = policy * mask
         policy = policy / (policy.sum() + 1e-8)

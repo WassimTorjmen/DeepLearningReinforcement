@@ -1,4 +1,11 @@
+import os
+import sys
 import pygame
+
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(project_root)
+sys.path.append(os.path.join(project_root, "Environnements"))
+
 from grid_world import GridWorld
 
 pygame.init()

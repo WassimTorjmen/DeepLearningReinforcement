@@ -19,7 +19,7 @@ pygame.init()
 
 # ── Chargement du modèle ──────────────────────────────────────
 agent_rl   = ReinforceAgentCritic(27, 9)
-MODEL_PATH = os.path.join(project_root, "models", "reinforce_critic", "REINFORCE_Critic_TicTacToe.pt")
+MODEL_PATH = os.path.join(project_root, "Experimentations", "models", "reinforce_critic", "REINFORCE_Critic_TicTacToe.pt")
 if os.path.exists(MODEL_PATH):
     agent_rl.load(MODEL_PATH)
     print("✓ Modèle chargé :", MODEL_PATH)
@@ -57,7 +57,7 @@ def agent_rl_action():
     state_t   = torch.FloatTensor(state).unsqueeze(0).to(agent_rl.device)
     with torch.no_grad():
         probs = agent_rl.policy(state_t).squeeze(0)
-    mask = torch.zeros(9)
+    mask = torch.zeros(9, device=agent_rl.device)
     mask[available] = 1.0
     probs = probs * mask
     probs = probs / (probs.sum() + 1e-8)
@@ -179,7 +179,7 @@ while running:
             if env.current_player == 1:
                 env.step(agent_rl_action())
             else:
-                env.step(agent_random.Choisir_action(env))
+                env.step(agent_random.select_action(env))
             last_ai = now
 
     pygame.display.flip()

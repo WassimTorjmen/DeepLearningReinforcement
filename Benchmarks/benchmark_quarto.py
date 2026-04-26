@@ -53,9 +53,9 @@ def jouer_une_partie(env, agent_1, agent_2):
     # Boucle de jeu : alterne entre les deux agents selon current_player
     while not env.done:
         if env.current_player == 1:
-            action = agent_1.Choisir_action(env)
+            action = agent_1.select_action(env)
         else:
-            action = agent_2.Choisir_action(env)
+            action = agent_2.select_action(env)
 
         # step() gère automatiquement les phases CHOOSE/PLACE et le
         # changement de joueur — l'agent n'a qu'à fournir l'action

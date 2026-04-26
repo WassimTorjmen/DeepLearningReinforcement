@@ -1,0 +1,23 @@
+{
+  "agent": "MuZero",
+  "env": "TicTacToe (vs Random)",
+  "num_episodes": 100,
+  "elapsed_s": 2.7,
+  "hyperparams": {
+    "hidden_size": 128,
+    "lr": 0.001,
+    "n_simulations": 3
+  },
+  "checkpoints": {
+    "100": {
+      "score_moyen": 0.398,
+      "longueur_moy": 7.57,
+      "temps_coup_ms": 0.435
+    }
+  },
+  "final_eval": {
+    "score_moyen": 0.4,
+    "longueur_moy": 7.3,
+    "temps_coup_ms": 0.4827
+  }
+}

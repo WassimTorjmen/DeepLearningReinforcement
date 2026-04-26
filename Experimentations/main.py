@@ -24,7 +24,10 @@ from experiment import (
     train_dqn_tictactoe, 
     evaluate_dqn_tictactoe,
     train_dqn_quarto,    
-    evaluate_dqn_quarto
+    evaluate_dqn_quarto,
+    train_ddqn_er_1player,
+    train_ddqn_er_tictactoe,
+    train_ddqn_er_quarto
 )
 
 from Environnements.line_world import LineWorld
@@ -41,6 +44,8 @@ import Alpha_zero
 import MuZero
 import DQN
 import ddqn
+import ddqn_er
+import ddqn_per
 
 if __name__ == "__main__":
     # ════════════════════════════════════════════════════════════
@@ -111,8 +116,78 @@ if __name__ == "__main__":
     #    agent_name="DoubleDQN",
     #    num_episodes=100_000, checkpoints=[1_000, 10_000, 100_000],
     #)
+    # ════════════════════════════════════════════════════════════
+    #  DOUBLE DQN + EXPERIENCE REPLAY
+    #  buffer_capacity et batch_size réduits pour éviter blocage
+    # ════════════════════════════════════════════════════════════
+    #run_experiment_dqn(
+    #    env=LineWorld(size=6), env_name="LineWorld",
+    #    train_fn=train_ddqn_er_1player, evaluate_fn=evaluate_dqn_1player,
+    #    agent=ddqn_er.DoubleDQNWithERAgent(8, 2,
+    #          buffer_capacity=5000, batch_size=32),
+    #    agent_name="DDQN_ER",
+    #   num_episodes=10_000, checkpoints=[1_000, 10_000],
+    #)
+    #run_experiment_dqn(
+    #    env=GridWorld(rows=5, cols=5), env_name="GridWorld",
+    #    train_fn=train_ddqn_er_1player, evaluate_fn=evaluate_dqn_1player,
+    #    agent=ddqn_er.DoubleDQNWithERAgent(31, 4,
+    #          buffer_capacity=5000, batch_size=32),
+    #    agent_name="DDQN_ER",
+    #    num_episodes=10_000, checkpoints=[1_000, 10_000],
+    #)
+    #run_experiment_dqn(
+    #    env=TicTacToe(), env_name="TicTacToe",
+    #    train_fn=train_ddqn_er_tictactoe, evaluate_fn=evaluate_dqn_tictactoe,
+    #    agent=ddqn_er.DoubleDQNWithERAgent(27, 9, hidden_size=128,
+    #          buffer_capacity=5000, batch_size=32, ),
+    #    agent_name="DDQN_ER_1M",
+    #    num_episodes=1_000_000, checkpoints=[1_000, 10_000, 100_000, 1_000_000],
+    #)
+    """run_experiment_dqn(
+        env=QuartoEnv(), env_name="Quarto",
+        train_fn=train_ddqn_er_quarto, evaluate_fn=evaluate_dqn_quarto,
+        agent=ddqn_er.DoubleDQNWithERAgent(105, 32, hidden_size=256,
+              buffer_capacity=5000, batch_size=32),
+        agent_name="DDQN_ER",
+        num_episodes=100_000, checkpoints=[1_000, 10_000, 100_000],
+    )"""
 
-    
+    # ════════════════════════════════════════════════════════════
+    #  DOUBLE DQN + PRIORITIZED EXPERIENCE REPLAY
+    # ════════════════════════════════════════════════════════════
+    #run_experiment_dqn(
+    #    env=LineWorld(size=6), env_name="LineWorld",
+    #    train_fn=train_ddqn_er_1player, evaluate_fn=evaluate_dqn_1player,
+    #    agent=ddqn_per.DoubleDQNWithPERAgent(8, 2,
+    #          buffer_capacity=500, batch_size=32),
+    #    agent_name="DDQN_PER",
+    #    num_episodes=10_000, checkpoints=[1_000, 10_000],
+    #)
+    #run_experiment_dqn(
+    #    env=GridWorld(rows=5, cols=5), env_name="GridWorld",
+    #    train_fn=train_ddqn_er_1player, evaluate_fn=evaluate_dqn_1player,
+    #    agent=ddqn_per.DoubleDQNWithPERAgent(31, 4,
+    #          buffer_capacity=500, batch_size=32),
+    #    agent_name="DDQN_PER",
+    #    num_episodes=10_000, checkpoints=[1_000, 10_000],
+    #)
+    run_experiment_dqn(
+        env=TicTacToe(), env_name="TicTacToe",
+        train_fn=train_ddqn_er_tictactoe, evaluate_fn=evaluate_dqn_tictactoe,
+        agent=ddqn_per.DoubleDQNWithPERAgent(27, 9, hidden_size=128,
+              buffer_capacity=2_000, batch_size=32),
+        agent_name="DDQN_PER",
+        num_episodes=100_000, checkpoints=[1_000, 10_000, 100_000],
+    )
+    #run_experiment_dqn(
+    #    env=QuartoEnv(), env_name="Quarto",
+    #    train_fn=train_ddqn_er_quarto, evaluate_fn=evaluate_dqn_quarto,
+    #    agent=ddqn_per.DoubleDQNWithPERAgent(105, 32, hidden_size=256,
+    #          buffer_capacity=2_000, batch_size=32),
+    #    agent_name="DDQN_PER",
+    #    num_episodes=100_000, checkpoints=[1_000, 10_000, 100_000],
+    #)
 
 
 
@@ -243,117 +318,4 @@ if __name__ == "__main__":
     #    num_episodes=10_000, checkpoints=[1_000, 10_000],
     #)
 
-    #  RANDOM ROLLOUT  (pas d'entraînement)
-    # ════════════════════════════════════════════════════════════
-    #run_experiment_no_training(
-    #    env=LineWorld(size=6), env_name="LineWorld",
-    #    evaluate_fn=evaluate_no_training_1player,
-    #    agent=Random_Rollout.RandomRolloutAgent(n_rollouts=10),
-    #    agent_name="RandomRollout",
-    #    n_games=500,
-    #)
-    #run_experiment_no_training(
-    #    env=GridWorld(rows=5, cols=5), env_name="GridWorld",
-    #    evaluate_fn=evaluate_no_training_1player,
-    #    agent=Random_Rollout.RandomRolloutAgent(n_rollouts=10),
-    #    agent_name="RandomRollout",
-    #    n_games=500,
-    #)
-    #run_experiment_no_training(
-    #    env=TicTacToe(), env_name="TicTacToe",
-    #    evaluate_fn=evaluate_no_training_tictactoe,
-    #    agent=Random_Rollout.RandomRolloutAgent(n_rollouts=10),
-    #    agent_name="RandomRollout",
-    #    n_games=500,
-    #)
-    #run_experiment_no_training(
-    #    env=QuartoEnv(), env_name="Quarto",
-    #    evaluate_fn=evaluate_no_training_quarto,
-    #    agent=Random_Rollout.RandomRolloutAgent(n_rollouts=10),
-    #    agent_name="RandomRollout",
-    #    n_games=100,  # moins de parties car très lent sur Quarto
-    #)
-
-
-    # ════════════════════════════════════════════════════════════
-    #  ALPHAZERO
-    #  evaluate_no_training_* car AlphaZero n'a pas d'attribut .policy
-    #  il utilise select_action() qui appelle directement le réseau
-    # ════════════════════════════════════════════════════════════
-    #run_experiment(
-    #    env=LineWorld(size=6), env_name="LineWorld",
-    #    train_fn=train_alphazero_1player,
-    #    evaluate_fn=evaluate_no_training_1player,   # ← pas evaluate_1player
-    #    agent=Alpha_zero.AlphaZeroAgent(8, 2, n_simulations=5),
-    #    agent_name="AlphaZero",
-    #    num_episodes=1_000, checkpoints=[500, 1_000],
-    #)
-    #run_experiment(
-    #    env=GridWorld(rows=5, cols=5), env_name="GridWorld",
-    #    train_fn=train_alphazero_1player,
-    #    evaluate_fn=evaluate_no_training_1player,   # ← pas evaluate_1player
-    #    agent=Alpha_zero.AlphaZeroAgent(31, 4, n_simulations=5),
-    #    agent_name="AlphaZero",
-    #    num_episodes=1_000, checkpoints=[500, 1_000],
-    #)
-    #run_experiment(
-    #    env=TicTacToe(), env_name="TicTacToe",
-    #    train_fn=train_alphazero_tictactoe,
-    #    evaluate_fn=evaluate_no_training_tictactoe,  # ← pas evaluate_tictactoe
-    #    agent=Alpha_zero.AlphaZeroAgent(27, 9, n_simulations=5),
-    #    agent_name="AlphaZero",
-    #    num_episodes=1_000, checkpoints=[500, 1_000],
-    #)
-    #run_experiment(
-    #    env=QuartoEnv(), env_name="Quarto",
-    #    train_fn=train_alphazero_quarto,
-    #    evaluate_fn=evaluate_no_training_quarto,     # ← pas evaluate_quarto
-    #    agent=Alpha_zero.AlphaZeroAgent(105, 32, n_simulations=5, hidden_size=128),
-    #    agent_name="AlphaZero",
-    #    num_episodes=1_000, checkpoints=[500, 1_000],
-    #)
-
-# ════════════════════════════════════════════════════════════
-    #  MUZERO
-    #  Mêmes fonctions train/evaluate qu'AlphaZero
-    # ════════════════════════════════════════════════════════════
-    """run_experiment(
-        env=LineWorld(size=6), env_name="LineWorld",
-        train_fn=train_alphazero_1player,
-        evaluate_fn=evaluate_no_training_1player,
-        agent=MuZero.MuZeroAgent(8, 2, n_simulations=5),
-        agent_name="MuZero",
-        num_episodes=1_000, checkpoints=[500, 1_000],
-    )
-    run_experiment(
-        env=GridWorld(rows=5, cols=5), env_name="GridWorld",
-        train_fn=train_alphazero_1player,
-        evaluate_fn=evaluate_no_training_1player,
-        agent=MuZero.MuZeroAgent(31, 4, n_simulations=5),
-        agent_name="MuZero",
-        num_episodes=1_000, checkpoints=[500, 1_000],
-    )
-    run_experiment(
-        env=TicTacToe(), env_name="TicTacToe",
-        train_fn=train_alphazero_tictactoe,
-        evaluate_fn=evaluate_no_training_tictactoe,
-        agent=MuZero.MuZeroAgent(27, 9, n_simulations=5),
-        agent_name="MuZero",
-        num_episodes=1_000, checkpoints=[500, 1_000],
-    )
-    run_experiment(
-        env=QuartoEnv(), env_name="Quarto",
-        train_fn=train_alphazero_quarto,
-        evaluate_fn=evaluate_no_training_quarto,
-        agent=MuZero.MuZeroAgent(105, 32, n_simulations=5, hidden_size=128),
-        agent_name="MuZero",
-        num_episodes=1_000, checkpoints=[500, 1_000],
-    )"""
-
-    run_experiment(
-         env=TicTacToe(), env_name="TicTacToe",
-         train_fn=train_tictactoe, evaluate_fn=evaluate_tictactoe,
-         agent=Reinforce_critic.ReinforceAgentCritic(27, 9),
-         agent_name="REINFORCE_Critic",
-         num_episodes=10_000, checkpoints=[1_000, 10_000],
-     )
+    
