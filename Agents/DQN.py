@@ -61,7 +61,7 @@ class DQNAgent:
         q_values = self.q_network(state_t).squeeze(0)
 
         # masque les actions illégales avec -inf pour ne jamais les choisir
-        mask = torch.full((self.num_actions,), float('-inf'))
+        mask = torch.full((self.num_actions,), float('-inf'), device=self.device)
         mask[available_actions] = 0.0
         q_values = q_values + mask
 
@@ -85,7 +85,7 @@ class DQNAgent:
         # cible
         with torch.no_grad():
             q_next = self.q_network(s_).squeeze(0)
-            mask   = torch.full((self.num_actions,), float('-inf'))
+            mask   = torch.full((self.num_actions,), float('-inf'), device=self.device)
             mask[next_available_actions] = 0.0
             q_next = q_next + mask
 

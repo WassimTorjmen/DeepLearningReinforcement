@@ -1,0 +1,24 @@
+{
+  "agent": "MuZeroStochastic",
+  "env": "Quarto (vs Random)",
+  "num_episodes": 300,
+  "elapsed_s": 392.0,
+  "hyperparams": {
+    "hidden_size": 128,
+    "lr": 0.001,
+    "n_simulations": 10,
+    "chance_size": 8
+  },
+  "checkpoints": {
+    "300": {
+      "score_moyen": 0.106,
+      "longueur_moy": 23.81,
+      "temps_coup_ms": 0.3747
+    }
+  },
+  "final_eval": {
+    "score_moyen": 0.5,
+    "longueur_moy": 22.3,
+    "temps_coup_ms": 0.4098
+  }
+}

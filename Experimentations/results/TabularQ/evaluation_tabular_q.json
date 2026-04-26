@@ -1,0 +1,76 @@
+{
+  "lineworld": {
+    "metrics": {
+      "score_moyen": 1.0,
+      "longueur_moy": 5.0,
+      "temps_coup_ms": 0.0011,
+      "taux_succes": 1.0,
+      "taux_echec": 0.0,
+      "n_games": 500
+    },
+    "q_table_stats": {
+      "n_etats": 5,
+      "n_entries": 9,
+      "q_max": 1.0,
+      "q_min": 0.951,
+      "q_mean": 0.9737,
+      "q_std": 0.0146
+    }
+  },
+  "gridworld": {
+    "metrics": {
+      "score_moyen": 1.0,
+      "longueur_moy": 4.0,
+      "temps_coup_ms": 0.0022,
+      "taux_succes": 1.0,
+      "taux_echec": 0.0,
+      "n_games": 500
+    },
+    "q_table_stats": {
+      "n_etats": 23,
+      "n_entries": 76,
+      "q_max": 1.0,
+      "q_min": -0.9976,
+      "q_mean": 0.9058,
+      "q_std": 0.3137
+    }
+  },
+  "tictactoe": {
+    "metrics": {
+      "score_moyen": 0.97,
+      "longueur_moy": 5.7,
+      "temps_coup_ms": 0.0027,
+      "taux_victoire": 0.97,
+      "taux_nul": 0.03,
+      "taux_defaite": 0.0,
+      "n_games": 500
+    },
+    "q_table_stats": {
+      "n_etats": 1879,
+      "n_entries": 6847,
+      "q_max": 1.0,
+      "q_min": -0.4095,
+      "q_mean": 0.0419,
+      "q_std": 0.155
+    }
+  },
+  "quarto": {
+    "metrics": {
+      "score_moyen": 0.238,
+      "longueur_moy": 20.57,
+      "temps_coup_ms": 0.0062,
+      "taux_victoire": 0.612,
+      "taux_nul": 0.014,
+      "taux_defaite": 0.374,
+      "n_games": 500
+    },
+    "q_table_stats": {
+      "n_etats": 153025,
+      "n_entries": 1428741,
+      "q_max": 0.19,
+      "q_min": -0.1,
+      "q_mean": 0.0,
+      "q_std": 0.0083
+    }
+  }
+}

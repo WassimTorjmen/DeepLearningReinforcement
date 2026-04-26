@@ -56,7 +56,7 @@ class ReinforceAgentMeanBaseline:
             self._reset_weights()
             probs = self.policy(state_t).squeeze(0)
 
-        mask  = torch.zeros(self.num_actions)
+        mask  = torch.zeros(self.num_actions, device=self.device)
         mask[available_actions] = 1.0
         probs = probs * mask
         total = probs.sum()

@@ -1,7 +1,26 @@
+import os
 import numpy as np
 import time
 import torch
 import matplotlib.pyplot as plt
+
+
+_BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+
+def _output_path(kind, agent_name, env_name, ext):
+    """Renvoie Experimentations/<kind>/<agent>/<agent>_<env>.<ext> et crée le dossier."""
+    folder = os.path.join(_BASE_DIR, kind, agent_name.lower())
+    os.makedirs(folder, exist_ok=True)
+    return os.path.join(folder, f"{agent_name}_{env_name}.{ext}")
+
+
+def _models_path(agent_name, env_name):
+    return _output_path("models", agent_name, env_name, "pt")
+
+
+def _plots_path(agent_name, env_name):
+    return _output_path("plots", agent_name, env_name, "png")
 
 
 def evaluate_1player(env, agent, n_games=500, max_steps=200):
@@ -15,7 +34,7 @@ def evaluate_1player(env, agent, n_games=500, max_steps=200):
             t0        = time.perf_counter()
             state_t   = torch.FloatTensor(state).unsqueeze(0).to(agent.device)
             probs     = agent.policy(state_t).squeeze(0)
-            mask      = torch.zeros(agent.num_actions)
+            mask      = torch.zeros(agent.num_actions, device=agent.device)
             mask[available] = 1.0
             probs     = probs * mask
             probs     = probs / (probs.sum() + 1e-8)
@@ -45,7 +64,7 @@ def evaluate_tictactoe(env, agent, n_games=500):
             t0      = time.perf_counter()
             state_t = torch.FloatTensor(state).unsqueeze(0).to(agent.device)
             probs   = agent.policy(state_t).squeeze(0)
-            mask    = torch.zeros(agent.num_actions)
+            mask    = torch.zeros(agent.num_actions, device=agent.device)
             mask[available] = 1.0
             probs   = probs * mask
             probs   = probs / (probs.sum() + 1e-8)
@@ -83,7 +102,7 @@ def evaluate_quarto(env, agent, n_games=500):
                 t0      = time.perf_counter()
                 state_t = torch.FloatTensor(state).unsqueeze(0).to(agent.device)
                 probs   = agent.policy(state_t).squeeze(0)
-                mask    = torch.zeros(agent.num_actions)
+                mask    = torch.zeros(agent.num_actions, device=agent.device)
                 mask[available] = 1.0
                 probs   = probs * mask
                 probs   = probs / (probs.sum() + 1e-8)
@@ -232,19 +251,22 @@ def train_quarto(env, agent, num_episodes, checkpoints, evaluate_fn, window=100)
                 state  = env.encode_state()
                 action = agent.select_action(state, available)
                 _, _, done, _ = env.step(action)
+                # On stocke un reward provisoire (0). S'il s'avère terminal,
+                # on l'écrase ci-dessous pour rester aligné avec saved_log_probs.
+                agent.store_reward(0)
                 if done:
-                    reward = 1 if env.winner == 1 else (-1 if env.winner == 2 else 0)
-                    agent.store_reward(reward)
-                    episode_reward += reward
-                else:
-                    agent.store_reward(0)
+                    final_r = 1 if env.winner == 1 else (-1 if env.winner == 2 else 0)
+                    agent.rewards[-1] = final_r
+                    episode_reward += final_r
             else:
                 action = int(np.random.choice(available))
                 _, _, done, _ = env.step(action)
-                if done and hasattr(agent, 'saved_log_probs') and len(agent.saved_log_probs) > 0:
-                    reward = -1 if env.winner == 2 else 0
-                    agent.store_reward(reward)
-                    episode_reward += reward
+                # Si J2 (random) termine la partie, on rétro-attribue le résultat
+                # à la dernière action de J1 (déjà loggée avec reward=0).
+                if done and len(agent.rewards) > 0:
+                    final_r = -1 if env.winner == 2 else 0
+                    agent.rewards[-1] = final_r
+                    episode_reward += final_r
         policy_loss, critic_loss = _parse_loss(agent.learn())
         all_policy_losses.append(policy_loss)
         if critic_loss is not None:
@@ -280,7 +302,7 @@ def plot_results(all_rewards, all_policy_losses, all_critic_losses, env_name, ag
         axes[2].set_title("Critic Loss par épisode")
         axes[2].grid(True, alpha=0.3)
     plt.tight_layout()
-    filename = f"{agent_name}_{env_name}.png".replace(" ", "_")
+    filename = _plots_path(agent_name, env_name)
     plt.savefig(filename, dpi=150)
     plt.show()
     print(f"Graphique sauvegardé → {filename}")
@@ -303,8 +325,9 @@ def run_experiment(env, env_name, train_fn, evaluate_fn, agent, agent_name, num_
     for ep, m in eval_results.items():
         print(f"{ep:>12,} | {m['score_moyen']:>12.4f} | {m['longueur_moy']:>13.2f} | {m['temps_coup_ms']:>11.4f}ms")
     plot_results(all_rewards, all_policy_losses, all_critic_losses, env_name, agent_name)
-    agent.save(f"{agent_name}_{env_name}.pt")
-    print(f"Modèle sauvegardé → {agent_name}_{env_name}.pt\n")
+    model_path = _models_path(agent_name, env_name)
+    agent.save(model_path)
+    print(f"Modèle sauvegardé → {model_path}\n")
 
 
 # ══ AGENTS SANS ENTRAÎNEMENT ══════════════════════════════════
@@ -482,7 +505,7 @@ def train_alphazero_quarto(env, agent, num_episodes, checkpoints, evaluate_fn, w
                 action = int(np.random.choice(available))
             _, _, done, _ = env.step(action)
             if done:
-                episode_reward = 1 if env.winner == 1 else (-1 if env.winner == 2 else 0)
+                episode_reward += 1 if env.winner == 1 else (-1 if env.winner == 2 else 0)
                 break
         agent.store_reward(episode_reward)
         policy_loss, critic_loss = _parse_loss(agent.learn())
@@ -515,7 +538,7 @@ def evaluate_dqn_1player(env, agent, n_games=500, max_steps=200):
             t0        = time.perf_counter()
             state_t   = torch.FloatTensor(state).unsqueeze(0).to(agent.device)
             q_values  = agent.q_network(state_t).squeeze(0)
-            mask      = torch.full((agent.num_actions,), float('-inf'))
+            mask      = torch.full((agent.num_actions,), float('-inf'), device=agent.device)
             mask[available] = 0.0
             action    = int((q_values + mask).argmax().item())
             t1        = time.perf_counter()
@@ -546,7 +569,7 @@ def evaluate_dqn_tictactoe(env, agent, n_games=500):
             t0        = time.perf_counter()
             state_t   = torch.FloatTensor(state).unsqueeze(0).to(agent.device)
             q_values  = agent.q_network(state_t).squeeze(0)
-            mask      = torch.full((agent.num_actions,), float('-inf'))
+            mask      = torch.full((agent.num_actions,), float('-inf'), device=agent.device)
             mask[available] = 0.0
             action    = int((q_values + mask).argmax().item())
             t1        = time.perf_counter()
@@ -585,7 +608,7 @@ def evaluate_dqn_quarto(env, agent, n_games=500):
                 t0      = time.perf_counter()
                 state_t = torch.FloatTensor(state).unsqueeze(0).to(agent.device)
                 q_values = agent.q_network(state_t).squeeze(0)
-                mask    = torch.full((agent.num_actions,), float('-inf'))
+                mask    = torch.full((agent.num_actions,), float('-inf'), device=agent.device)
                 mask[available] = 0.0
                 action  = int((q_values + mask).argmax().item())
                 t1      = time.perf_counter()
@@ -627,7 +650,7 @@ def train_dqn_1player(env, agent, num_episodes, checkpoints, evaluate_fn, max_st
             q_sa = agent.q_network(s)[0, action]
             with torch.no_grad():
                 q_next = agent.q_network(s_).squeeze(0)
-                mask   = torch.full((agent.num_actions,), float('-inf'))
+                mask   = torch.full((agent.num_actions,), float('-inf'), device=agent.device)
                 mask[next_available] = 0.0
                 q_next = q_next + mask
             target = torch.tensor(
@@ -691,7 +714,7 @@ def train_dqn_tictactoe(env, agent, num_episodes, checkpoints, evaluate_fn):
             q_sa = agent.q_network(s)[0, action]
             with torch.no_grad():
                 q_next = agent.q_network(s_).squeeze(0)
-                mask   = torch.full((agent.num_actions,), float('-inf'))
+                mask   = torch.full((agent.num_actions,), float('-inf'), device=agent.device)
                 mask[next_available] = 0.0
                 q_next = q_next + mask
             target = torch.tensor(
@@ -744,7 +767,7 @@ def train_dqn_quarto(env, agent, num_episodes, checkpoints, evaluate_fn):
                 q_sa = agent.q_network(s)[0, action]
                 with torch.no_grad():
                     q_next = agent.q_network(s_).squeeze(0)
-                    mask   = torch.full((agent.num_actions,), float('-inf'))
+                    mask   = torch.full((agent.num_actions,), float('-inf'), device=agent.device)
                     mask[next_available] = 0.0
                     q_next = q_next + mask
                 target = torch.tensor(
@@ -806,12 +829,13 @@ def run_experiment_dqn(env, env_name, train_fn, evaluate_fn, agent, agent_name, 
     axes[1].set_title("Loss par épisode")
     axes[1].grid(True, alpha=0.3)
     plt.tight_layout()
-    filename = f"{agent_name}_{env_name}.png".replace(" ", "_")
+    filename = _plots_path(agent_name, env_name)
     plt.savefig(filename, dpi=150)
     plt.show()
     print(f"Graphique sauvegardé → {filename}")
-    agent.save(f"{agent_name}_{env_name}.pt")
-    print(f"Modèle sauvegardé → {agent_name}_{env_name}.pt\n")
+    model_path = _models_path(agent_name, env_name)
+    agent.save(model_path)
+    print(f"Modèle sauvegardé → {model_path}\n")
 
 
 # ══ DDQN + ER  et  DDQN + PER ════════════════════════════════

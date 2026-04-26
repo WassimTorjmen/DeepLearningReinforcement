@@ -62,7 +62,7 @@ class ReinforceAgent:
             self.saved_log_probs.append(torch.tensor(0.0, requires_grad=True))
             return action
 
-        mask  = torch.zeros(self.num_actions)
+        mask  = torch.zeros(self.num_actions, device=self.device)
         mask[available_actions] = 1.0
         probs = probs * mask
         probs = probs / (probs.sum() + 1e-8)
@@ -132,7 +132,7 @@ def evaluate(env, agent, n_games=500):
             t0      = time.perf_counter()
             state_t = torch.FloatTensor(state).unsqueeze(0).to(agent.device)
             probs   = agent.policy(state_t).squeeze(0)
-            mask    = torch.zeros(agent.num_actions)
+            mask    = torch.zeros(agent.num_actions, device=agent.device)
             mask[available] = 1.0
             probs   = probs * mask
             probs   = probs / (probs.sum() + 1e-8)

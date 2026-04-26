@@ -115,7 +115,7 @@ class DoubleDQNWithERAgent:
             return int(np.random.choice(available_actions))
         state_t  = torch.FloatTensor(state).unsqueeze(0).to(self.device)
         q_values = self.q_network(state_t).squeeze(0)
-        mask     = torch.full((self.num_actions,), float('-inf'))
+        mask     = torch.full((self.num_actions,), float('-inf'), device=self.device)
         mask[available_actions] = 0.0
         return int((q_values + mask).argmax().item())
 

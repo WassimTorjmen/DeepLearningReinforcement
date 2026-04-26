@@ -1,0 +1,21 @@
+{
+  "agent": "MCTS_UCT",
+  "env": "GridWorld (5\u00d75)",
+  "num_episodes": 1,
+  "elapsed_s": 390.1,
+  "hyperparams": {
+    "n_simulations": 100
+  },
+  "checkpoints": {
+    "1": {
+      "score_moyen": 1.0,
+      "longueur_moy": 5.59,
+      "temps_coup_ms": 69.5319
+    }
+  },
+  "final_eval": {
+    "score_moyen": 1.0,
+    "longueur_moy": 5.47,
+    "temps_coup_ms": 71.5769
+  }
+}

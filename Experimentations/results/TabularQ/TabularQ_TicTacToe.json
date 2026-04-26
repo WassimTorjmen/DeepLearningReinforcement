@@ -1,0 +1,31 @@
+{
+  "agent": "TabularQ",
+  "env": "TicTacToe (vs Random)",
+  "num_episodes": 10000,
+  "elapsed_s": 0.6,
+  "hyperparams": {
+    "alpha": 0.1,
+    "gamma": 0.99,
+    "epsilon": 1.0,
+    "epsilon_decay": 0.9995,
+    "epsilon_min": 0.05
+  },
+  "q_table_size": 1879,
+  "checkpoints": {
+    "1000": {
+      "score_moyen": 0.766,
+      "longueur_moy": 6.69,
+      "temps_coup_ms": 0.0025
+    },
+    "10000": {
+      "score_moyen": 0.968,
+      "longueur_moy": 5.71,
+      "temps_coup_ms": 0.0025
+    }
+  },
+  "final_eval": {
+    "score_moyen": 0.956,
+    "longueur_moy": 5.7,
+    "temps_coup_ms": 0.0028
+  }
+}

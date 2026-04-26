@@ -188,7 +188,7 @@ class ExpertApprenticeAgent:
         probs   = self.apprentice(state_t).squeeze(0)
 
         # masque les actions illégales
-        mask    = torch.zeros(self.num_actions)
+        mask    = torch.zeros(self.num_actions, device=self.device)
         mask[available_actions] = 1.0
         probs   = probs * mask
         probs   = probs / (probs.sum() + 1e-8)

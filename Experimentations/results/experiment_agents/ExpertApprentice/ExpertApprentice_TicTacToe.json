@@ -1,0 +1,28 @@
+{
+  "agent": "ExpertApprentice",
+  "env": "TicTacToe (vs Random)",
+  "num_episodes": 5000,
+  "elapsed_s": 101.4,
+  "hyperparams": {
+    "hidden_size": 128,
+    "lr": 0.001,
+    "n_simulations": 50
+  },
+  "checkpoints": {
+    "1000": {
+      "score_moyen": 0.896,
+      "longueur_moy": 5.86,
+      "temps_coup_ms": 0.154
+    },
+    "5000": {
+      "score_moyen": 0.936,
+      "longueur_moy": 5.36,
+      "temps_coup_ms": 0.5342
+    }
+  },
+  "final_eval": {
+    "score_moyen": 0.916,
+    "longueur_moy": 5.4,
+    "temps_coup_ms": 0.5329
+  }
+}
