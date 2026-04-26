@@ -16,7 +16,14 @@ from experiment import (
     evaluate_no_training_quarto,
     train_alphazero_quarto,
     train_alphazero_tictactoe,
-    train_alphazero_1player
+    train_alphazero_1player,
+    run_experiment_dqn,
+    train_dqn_1player,   
+    evaluate_dqn_1player,
+    train_dqn_tictactoe, 
+    evaluate_dqn_tictactoe,
+    train_dqn_quarto,    
+    evaluate_dqn_quarto
 )
 
 from line_world import LineWorld
@@ -31,8 +38,82 @@ import PPO_A2C
 import Random_Rollout
 import Alpha_zero
 import MuZero
+import DQN
+import ddqn
 
 if __name__ == "__main__":
+    # ════════════════════════════════════════════════════════════
+    #  DQN
+    #  LineWorld et GridWorld : paramètres de base
+    #  TicTacToe : hidden_size=128, 100 000 épisodes
+    #  Quarto    : hidden_size=256, 100 000 épisodes
+    # ════════════════════════════════════════════════════════════
+    #run_experiment_dqn(
+    #    env=LineWorld(size=6), env_name="LineWorld",
+    #    train_fn=train_dqn_1player, evaluate_fn=evaluate_dqn_1player,
+    #    agent=DQN.DQNAgent(8, 2),
+    #    agent_name="DQN",
+    #    num_episodes=10_000, checkpoints=[1_000, 10_000],
+    #)
+    #run_experiment_dqn(
+    #    env=GridWorld(rows=5, cols=5), env_name="GridWorld",
+    #    train_fn=train_dqn_1player, evaluate_fn=evaluate_dqn_1player,
+    #    agent=DQN.DQNAgent(31, 4),
+    #    agent_name="DQN",
+    #    num_episodes=10_000, checkpoints=[1_000, 10_000],
+    #)
+    #run_experiment_dqn(
+    #    env=TicTacToe(), env_name="TicTacToe",
+    #    train_fn=train_dqn_tictactoe, evaluate_fn=evaluate_dqn_tictactoe,
+    #    agent=DQN.DQNAgent(27, 9, hidden_size=128),
+    #    agent_name="DQN",
+    #    num_episodes=100_000, checkpoints=[1_000, 10_000, 100_000],
+    #)
+    #run_experiment_dqn(
+    #    env=QuartoEnv(), env_name="Quarto",
+    #    train_fn=train_dqn_quarto, evaluate_fn=evaluate_dqn_quarto,
+    #    agent=DQN.DQNAgent(105, 32, hidden_size=256),
+    #    agent_name="DQN",
+    #    num_episodes=100_000, checkpoints=[1_000, 10_000, 100_000],
+    #)
+
+
+
+    # ════════════════════════════════════════════════════════════
+    #  DOUBLE DQN
+    # ════════════════════════════════════════════════════════════
+    #run_experiment_dqn(
+    #    env=LineWorld(size=6), env_name="LineWorld",
+    #    train_fn=train_dqn_1player, evaluate_fn=evaluate_dqn_1player,
+    #    agent=ddqn.DoubleDQNAgent(8, 2),
+    #    agent_name="DoubleDQN",
+    #    num_episodes=10_000, checkpoints=[1_000, 10_000],
+    #)
+    #run_experiment_dqn(
+    #    env=GridWorld(rows=5, cols=5), env_name="GridWorld",
+    #    train_fn=train_dqn_1player, evaluate_fn=evaluate_dqn_1player,
+    #    agent=ddqn.DoubleDQNAgent(31, 4),
+    #    agent_name="DoubleDQN",
+    #    num_episodes=10_000, checkpoints=[1_000, 10_000],
+    #)
+    #run_experiment_dqn(
+    #    env=TicTacToe(), env_name="TicTacToe",
+    #    train_fn=train_dqn_tictactoe, evaluate_fn=evaluate_dqn_tictactoe,
+    #    agent=ddqn.DoubleDQNAgent(27, 9, hidden_size=128),
+    #    agent_name="DoubleDQN",
+    #    num_episodes=100_000, checkpoints=[1_000, 10_000, 100_000],
+    #)
+    #run_experiment_dqn(
+    #    env=QuartoEnv(), env_name="Quarto",
+    #    train_fn=train_dqn_quarto, evaluate_fn=evaluate_dqn_quarto,
+    #    agent=ddqn.DoubleDQNAgent(105, 32, hidden_size=256),
+    #    agent_name="DoubleDQN",
+    #    num_episodes=100_000, checkpoints=[1_000, 10_000, 100_000],
+    #)
+
+    
+
+
 
     # ════════════════════════════════════════════════════════════
     #  REINFORCE
