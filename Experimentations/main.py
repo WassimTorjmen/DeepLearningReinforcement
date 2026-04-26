@@ -350,36 +350,10 @@ if __name__ == "__main__":
         num_episodes=1_000, checkpoints=[500, 1_000],
     )"""
 
-
-
-    # ════════════════════════════════════════════════════════════
-    #  PPO A2C
-    # ════════════════════════════════════════════════════════════
-    """run_experiment(
-        env=LineWorld(size=6), env_name="LineWorld",
-        train_fn=train_1player, evaluate_fn=evaluate_1player,
-        agent=PPO_A2C.PPOAgent(8, 2),
-        agent_name="PPO_A2C",
-        num_episodes=10_000, checkpoints=[1_000, 10_000],
-    )
     run_experiment(
-        env=GridWorld(rows=5, cols=5), env_name="GridWorld",
-        train_fn=train_1player, evaluate_fn=evaluate_1player,
-        agent=PPO_A2C.PPOAgent(31, 4),
-        agent_name="PPO_A2C",
-        num_episodes=10_000, checkpoints=[1_000, 10_000],
-    )
-    run_experiment(
-        env=TicTacToe(), env_name="TicTacToe",
-        train_fn=train_tictactoe, evaluate_fn=evaluate_tictactoe,
-        agent=PPO_A2C.PPOAgent(27, 9),
-        agent_name="PPO_A2C",
-        num_episodes=10_000, checkpoints=[1_000, 10_000],
-    )"""
-    run_experiment(
-        env=QuartoEnv(), env_name="Quarto",
-        train_fn=train_quarto, evaluate_fn=evaluate_quarto,
-        agent=PPO_A2C.PPOAgent(105, 32, hidden_size=128),
-        agent_name="PPO_A2C",
-        num_episodes=100_000, checkpoints=[1_000, 10_000, 100_000],
-    )
+         env=TicTacToe(), env_name="TicTacToe",
+         train_fn=train_tictactoe, evaluate_fn=evaluate_tictactoe,
+         agent=Reinforce_critic.ReinforceAgentCritic(27, 9),
+         agent_name="REINFORCE_Critic",
+         num_episodes=10_000, checkpoints=[1_000, 10_000],
+     )

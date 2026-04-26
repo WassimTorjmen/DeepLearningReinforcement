@@ -11,18 +11,14 @@ sys.path.append(os.path.join(project_root, "Agents"))
 sys.path.append(os.path.join(project_root, "Environnements"))
 
 from tictactoe import TicTacToe
-from random_agent import RandomAgent
+from Agents.random_agent import RandomAgent
 
-# Essaie les deux noms possibles
-try:
-    from Reinforce_critic import ReinforceAgentCritic
-except ModuleNotFoundError:
-    from REINFORCE_critic import ReinforceAgentCritic
+from Agents.Reinforce_critic import ReinforceAgentCritic
 
 pygame.init()
 
 # ── Chargement du modèle ──────────────────────────────────────
-agent_rl   = ReinforceAgentCritic(27, 9, hidden_size=128)
+agent_rl   = ReinforceAgentCritic(27, 9)
 MODEL_PATH = os.path.join(project_root, "REINFORCE_Critic_TicTacToe.pt")
 if os.path.exists(MODEL_PATH):
     agent_rl.load(MODEL_PATH)
