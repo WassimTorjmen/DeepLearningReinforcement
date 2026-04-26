@@ -122,13 +122,17 @@ Tailles d'entrée à respecter :
 
 ## Modèles pré-entraînés fournis
 
-| Fichier                      | Algo            | Environnement |
-|------------------------------|-----------------|---------------|
-| `PPO_A2C_LineWorld.pt`       | PPO A2C         | LineWorld     |
-| `PPO_A2C_GridWorld.pt`       | PPO A2C         | GridWorld     |
-| `PPO_A2C_TicTacToe.pt`       | PPO A2C         | TicTacToe     |
-| `PPO_A2C_Quarto.pt`          | PPO A2C         | Quarto        |
-| `DDQN_ER_LineWorld.pt`       | DDQN + ER       | LineWorld     |
+Les `.pt` sont rangés sous `models/<algo_lowercase>/` à la racine du projet :
+
+| Fichier                                              | Algo             | Environnement |
+|------------------------------------------------------|------------------|---------------|
+| `models/ppo_a2c/PPO_A2C_LineWorld.pt`                | PPO A2C          | LineWorld     |
+| `models/ppo_a2c/PPO_A2C_GridWorld.pt`                | PPO A2C          | GridWorld     |
+| `models/ppo_a2c/PPO_A2C_TicTacToe.pt`                | PPO A2C          | TicTacToe     |
+| `models/ppo_a2c/PPO_A2C_Quarto.pt`                   | PPO A2C          | Quarto        |
+| `models/reinforce_critic/REINFORCE_Critic_TicTacToe.pt` | REINFORCE+Critic | TicTacToe |
+| `models/ddqn_er/DDQN_ER_LineWorld.pt`                | DDQN + ER        | LineWorld     |
+| `models/alphazero/`, `models/MuZero/`, `models/MuZeroStochastic/`, `models/ExpertApprentice/`, `models/TabularQ/` | (pré-existants) | — |
 
 ## Notes
 

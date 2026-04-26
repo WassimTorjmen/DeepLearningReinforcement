@@ -1,7 +1,19 @@
+import os
 import numpy as np
 import time
 import torch
 import matplotlib.pyplot as plt
+
+
+_BASE_DIR    = os.path.dirname(os.path.abspath(__file__))
+_PROJECT_DIR = os.path.dirname(_BASE_DIR)
+
+
+def _models_path(agent_name, env_name):
+    """Renvoie <projet>/models/<agent>/<agent>_<env>.pt et crée le dossier."""
+    folder = os.path.join(_PROJECT_DIR, "models", agent_name.lower())
+    os.makedirs(folder, exist_ok=True)
+    return os.path.join(folder, f"{agent_name}_{env_name}.pt")
 
 
 def evaluate_1player(env, agent, n_games=500, max_steps=200):
@@ -303,8 +315,9 @@ def run_experiment(env, env_name, train_fn, evaluate_fn, agent, agent_name, num_
     for ep, m in eval_results.items():
         print(f"{ep:>12,} | {m['score_moyen']:>12.4f} | {m['longueur_moy']:>13.2f} | {m['temps_coup_ms']:>11.4f}ms")
     plot_results(all_rewards, all_policy_losses, all_critic_losses, env_name, agent_name)
-    agent.save(f"{agent_name}_{env_name}.pt")
-    print(f"Modèle sauvegardé → {agent_name}_{env_name}.pt\n")
+    model_path = _models_path(agent_name, env_name)
+    agent.save(model_path)
+    print(f"Modèle sauvegardé → {model_path}\n")
 
 
 # ══ AGENTS SANS ENTRAÎNEMENT ══════════════════════════════════
@@ -810,8 +823,9 @@ def run_experiment_dqn(env, env_name, train_fn, evaluate_fn, agent, agent_name, 
     plt.savefig(filename, dpi=150)
     plt.show()
     print(f"Graphique sauvegardé → {filename}")
-    agent.save(f"{agent_name}_{env_name}.pt")
-    print(f"Modèle sauvegardé → {agent_name}_{env_name}.pt\n")
+    model_path = _models_path(agent_name, env_name)
+    agent.save(model_path)
+    print(f"Modèle sauvegardé → {model_path}\n")
 
 
 # ══ DDQN + ER  et  DDQN + PER ════════════════════════════════

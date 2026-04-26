@@ -6,7 +6,7 @@ import argparse
 
 from Training.train_agents import main as train_main
 from Evaluation.evaluate_agents import main as eval_main
-from experiment_agents import main as exp_main
+from Experimentations.experiment_agents import main as exp_main
 
 
 def run_train(env, episodes):

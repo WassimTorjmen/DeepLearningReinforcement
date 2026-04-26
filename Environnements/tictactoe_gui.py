@@ -19,7 +19,7 @@ pygame.init()
 
 # ── Chargement du modèle ──────────────────────────────────────
 agent_rl   = ReinforceAgentCritic(27, 9)
-MODEL_PATH = os.path.join(project_root, "REINFORCE_Critic_TicTacToe.pt")
+MODEL_PATH = os.path.join(project_root, "models", "reinforce_critic", "REINFORCE_Critic_TicTacToe.pt")
 if os.path.exists(MODEL_PATH):
     agent_rl.load(MODEL_PATH)
     print("✓ Modèle chargé :", MODEL_PATH)

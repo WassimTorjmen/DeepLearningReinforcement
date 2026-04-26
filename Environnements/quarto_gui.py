@@ -17,9 +17,9 @@ from Agents.PPO_A2C import PPOAgent
 pygame.init()
 
 # ── Chargement du modèle ──────────────────────────────────────
-# Le .pt est à la racine DeepLearningReinforcement/
+# Le .pt est dans Experimentations/models/ppo_a2c/
 agent_rl   = PPOAgent(105, 32, hidden_size=128)
-MODEL_PATH = os.path.join(project_root, "PPO_A2C_Quarto.pt")
+MODEL_PATH = os.path.join(project_root, "models", "ppo_a2c", "PPO_A2C_Quarto.pt")
 if os.path.exists(MODEL_PATH):
     agent_rl.load(MODEL_PATH)
     print("✓ Modèle chargé :", MODEL_PATH)
