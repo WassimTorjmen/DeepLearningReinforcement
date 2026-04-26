@@ -1,9 +1,10 @@
 import sys
 import os
-
 base = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.join(base, "Agents"))
-sys.path.append(os.path.join(base, "Environnements"))
+project_root = os.path.dirname(base)
+sys.path.append(project_root)
+sys.path.append(os.path.join(project_root, "Agents"))
+sys.path.append(os.path.join(project_root, "Environnements"))
 
 from experiment import (
     run_experiment,
@@ -26,10 +27,10 @@ from experiment import (
     evaluate_dqn_quarto
 )
 
-from line_world import LineWorld
-from grid_world  import GridWorld
-from tictactoe   import TicTacToe
-from quarto      import QuartoEnv
+from Environnements.line_world import LineWorld
+from Environnements.grid_world  import GridWorld
+from Environnements.tictactoe   import TicTacToe
+from Environnements.quarto      import QuartoEnv
 
 import REINFORCE
 import Reinforce_mean_baseline
@@ -316,7 +317,7 @@ if __name__ == "__main__":
     #  MUZERO
     #  Mêmes fonctions train/evaluate qu'AlphaZero
     # ════════════════════════════════════════════════════════════
-    run_experiment(
+    """run_experiment(
         env=LineWorld(size=6), env_name="LineWorld",
         train_fn=train_alphazero_1player,
         evaluate_fn=evaluate_no_training_1player,
@@ -347,4 +348,12 @@ if __name__ == "__main__":
         agent=MuZero.MuZeroAgent(105, 32, n_simulations=5, hidden_size=128),
         agent_name="MuZero",
         num_episodes=1_000, checkpoints=[500, 1_000],
-    )
+    )"""
+
+    run_experiment(
+         env=TicTacToe(), env_name="TicTacToe",
+         train_fn=train_tictactoe, evaluate_fn=evaluate_tictactoe,
+         agent=Reinforce_critic.ReinforceAgentCritic(27, 9),
+         agent_name="REINFORCE_Critic",
+         num_episodes=10_000, checkpoints=[1_000, 10_000],
+     )
