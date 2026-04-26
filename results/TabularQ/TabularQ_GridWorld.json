@@ -1,0 +1,31 @@
+{
+  "agent": "TabularQ",
+  "env": "GridWorld (5\u00d75)",
+  "num_episodes": 10000,
+  "elapsed_s": 0.8,
+  "hyperparams": {
+    "alpha": 0.2,
+    "gamma": 0.99,
+    "epsilon": 1.0,
+    "epsilon_decay": 0.999,
+    "epsilon_min": 0.05
+  },
+  "q_table_size": 23,
+  "checkpoints": {
+    "1000": {
+      "score_moyen": 1.0,
+      "longueur_moy": 4.0,
+      "temps_coup_ms": 0.0022
+    },
+    "10000": {
+      "score_moyen": 1.0,
+      "longueur_moy": 4.0,
+      "temps_coup_ms": 0.0018
+    }
+  },
+  "final_eval": {
+    "score_moyen": 1.0,
+    "longueur_moy": 4.0,
+    "temps_coup_ms": 0.0018
+  }
+}

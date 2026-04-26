@@ -1,0 +1,25 @@
+{
+  "mcts": {
+    "quarto": {
+      "agent": "MCTS_UCT",
+      "env": "Quarto (vs Random)",
+      "num_episodes": 1,
+      "elapsed_s": 376.9,
+      "hyperparams": {
+        "n_simulations": 100
+      },
+      "checkpoints": {
+        "1": {
+          "score_moyen": 0.868,
+          "longueur_moy": 17.73,
+          "temps_coup_ms": 50.0438
+        }
+      },
+      "final_eval": {
+        "score_moyen": 0.842,
+        "longueur_moy": 18.24,
+        "temps_coup_ms": 33.926
+      }
+    }
+  }
+}

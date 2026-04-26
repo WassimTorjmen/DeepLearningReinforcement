@@ -9,10 +9,10 @@ Entraînement de 5 agents sur les 4 environnements du projet :
   - MuZeroStochastique    (MuZero + encodeur stochastique VAE)
 
 Utilisation :
-  python Training/train_agents.py --agent all --env all --episodes 10000
-  python Training/train_agents.py --agent muzero --env tictactoe --episodes 50000
+  python train_agents.py --agent all --env all --episodes 10000
+  python train_agents.py --agent muzero --env tictactoe --episodes 50000
   python train_agents.py --agent randomrollout --env all
-  python Training/train_agents.py --agent mcts --env all
+  python train_agents.py --agent mcts --env all
 """
 
 import sys
@@ -166,6 +166,14 @@ def train_expert_quarto(env, agent, num_episodes, checkpoints, evaluate_fn, wind
 
     return all_rewards, all_policy_losses, [], eval_results
 
+############################
+def select_action_compatible(agent, env, available):
+    if agent.__class__.__name__ in ["MCTSAgent", "RandomRolloutAgent"]:
+        return agent.select_action(env, available)
+
+    state = env.encode_state()
+    return agent.select_action(state, available)
+#########################
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  Évaluation générique (compatible avec agents sans réseau et avec réseau)
@@ -183,7 +191,8 @@ def evaluate_agent_1player(env, agent, n_games=500, max_steps=200):
         while not env.done and steps < max_steps:
             available = env.get_actions()
             t0 = time.perf_counter()
-            action = agent.select_action(env, available)
+            #state = env.encode_state()
+            action = select_action_compatible(agent, env, available)
             t1 = time.perf_counter()
             times.append((t1 - t0) * 1000)
             _, reward, _ = env.step(action)
@@ -210,7 +219,8 @@ def evaluate_agent_tictactoe(env, agent, n_games=500):
         while not env.done:
             available = env.get_actions()
             t0 = time.perf_counter()
-            action = agent.select_action(env, available)
+            #state = env.encode_state()
+            action = select_action_compatible(agent, env, available)
             t1 = time.perf_counter()
             times.append((t1 - t0) * 1000)
             _, _, done, info = env.step(action)
@@ -243,9 +253,10 @@ def evaluate_agent_quarto(env, agent, n_games=500):
 
         while not env.done:
             available = env.get_actions()
+            #state = env.encode_state()
             if env.current_player == 1:
                 t0 = time.perf_counter()
-                action = agent.select_action(env, available)
+                action = select_action_compatible(agent, env, available)
                 t1 = time.perf_counter()
                 times.append((t1 - t0) * 1000)
             else:
