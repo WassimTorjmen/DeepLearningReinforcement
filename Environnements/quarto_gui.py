@@ -59,7 +59,7 @@ small_font = pygame.font.Font(None, 28)
 
 MODE        = 1
 in_menu     = True
-AI_DELAY_MS = 1000
+AI_DELAY_MS = 1500
 pending_ai  = False
 last_ai_time = 0
 
@@ -271,10 +271,14 @@ while running:
     if pending_ai and not env.done and now - last_ai_time >= AI_DELAY_MS:
         if MODE == 1 and env.current_player == 2:
             env.step(agent_rl_action())
-            pending_ai = False
+            last_ai_time = now
+            if env.done or env.current_player == 1:
+                pending_ai = False
         elif MODE == 3 and env.current_player == 2:
             env.step(agent_random.Choisir_action(env))
-            pending_ai = False
+            last_ai_time = now
+            if env.done or env.current_player == 1:
+                pending_ai = False
         elif MODE == 2:
             if env.current_player == 1:
                 env.step(agent_rl_action())
