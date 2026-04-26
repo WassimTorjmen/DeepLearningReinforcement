@@ -1,0 +1,87 @@
+{
+  "agent": "TabularQ",
+  "env": "Quarto (vs Random)",
+  "num_episodes": 10000,
+  "elapsed_s": 3.9,
+  "hyperparams": {
+    "alpha": 0.1,
+    "gamma": 0.99,
+    "epsilon": 1.0,
+    "epsilon_decay": 0.9995,
+    "epsilon_min": 0.05
+  },
+  "hp_search": [
+    {
+      "label": "\u03b1=0.05  \u03b5_decay=0.99995",
+      "hp": {
+        "alpha": 0.05,
+        "gamma": 0.99,
+        "epsilon": 1.0,
+        "epsilon_decay": 0.99995,
+        "epsilon_min": 0.05
+      },
+      "score_final": 0.095,
+      "q_size": 271635
+    },
+    {
+      "label": "\u03b1=0.1  \u03b5_decay=0.9999",
+      "hp": {
+        "alpha": 0.1,
+        "gamma": 0.99,
+        "epsilon": 1.0,
+        "epsilon_decay": 0.9999,
+        "epsilon_min": 0.05
+      },
+      "score_final": 0.12,
+      "q_size": 258320
+    },
+    {
+      "label": "\u03b1=0.2  \u03b5_decay=0.9999",
+      "hp": {
+        "alpha": 0.2,
+        "gamma": 0.99,
+        "epsilon": 1.0,
+        "epsilon_decay": 0.9999,
+        "epsilon_min": 0.05
+      },
+      "score_final": 0.215,
+      "q_size": 259042
+    },
+    {
+      "label": "\u03b1=0.1  \u03b5_decay=0.9995",
+      "hp": {
+        "alpha": 0.1,
+        "gamma": 0.99,
+        "epsilon": 1.0,
+        "epsilon_decay": 0.9995,
+        "epsilon_min": 0.05
+      },
+      "score_final": 0.28,
+      "q_size": 226451
+    }
+  ],
+  "checkpoints": {
+    "1000": {
+      "score_moyen": 0.206,
+      "longueur_moy": 21.04,
+      "temps_coup_ms": 0.005
+    }
+  },
+  "final_eval": {
+    "score_moyen": 0.234,
+    "longueur_moy": 20.52,
+    "temps_coup_ms": 0.006,
+    "taux_victoire": 0.606,
+    "taux_nul": 0.022,
+    "taux_defaite": 0.372,
+    "n_games": 500
+  },
+  "q_table_stats": {
+    "n_etats": 127034,
+    "n_entries": 1170810,
+    "q_max": 0.271,
+    "q_min": -0.1,
+    "q_mean": 0.0001,
+    "q_std": 0.0092
+  }
+}
