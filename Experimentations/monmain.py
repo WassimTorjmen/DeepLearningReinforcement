@@ -1,8 +1,10 @@
 import sys
 import os
 base = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.join(base, "Agents"))
-sys.path.append(os.path.join(base, "Environnements"))
+project_root = os.path.dirname(base)
+sys.path.append(project_root)
+sys.path.append(os.path.join(project_root, "Agents"))
+sys.path.append(os.path.join(project_root, "Environnements"))
 
 from experiment import (
     run_experiment_dqn,
@@ -11,12 +13,13 @@ from experiment import (
     train_ddqn_er_quarto,    evaluate_dqn_quarto,
 )
 
-from line_world import LineWorld
-from grid_world  import GridWorld
-from tictactoe   import TicTacToe
-from quarto      import QuartoEnv
+from Environnements.line_world import LineWorld
+from Environnements.grid_world  import GridWorld
+from Environnements.tictactoe   import TicTacToe
+from Environnements.quarto      import QuartoEnv
 
 import ddqn_er
+
 import ddqn_per
 
 if __name__ == "__main__":
