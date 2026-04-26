@@ -12,14 +12,14 @@ sys.path.append(os.path.join(project_root, "Environnements"))
 
 from quarto import QuartoEnv
 from Agents.random_agent import RandomAgent
-import REINFORCE_critic
+from Agents.PPO_A2C import PPOAgent
 
 pygame.init()
 
 # ── Chargement du modèle ──────────────────────────────────────
 # Le .pt est à la racine DeepLearningReinforcement/
-agent_rl   = REINFORCE_critic.ReinforceAgentCritic(105, 32, hidden_size=256)
-MODEL_PATH = os.path.join(project_root, "REINFORCE_Critic_Quarto.pt")
+agent_rl   = PPOAgent(105, 32, hidden_size=128)
+MODEL_PATH = os.path.join(project_root, "PPO_A2C_Quarto.pt")
 if os.path.exists(MODEL_PATH):
     agent_rl.load(MODEL_PATH)
     print("✓ Modèle chargé :", MODEL_PATH)
@@ -59,7 +59,7 @@ small_font = pygame.font.Font(None, 28)
 
 MODE        = 1
 in_menu     = True
-AI_DELAY_MS = 1000
+AI_DELAY_MS = 1500
 pending_ai  = False
 last_ai_time = 0
 
@@ -135,10 +135,18 @@ def draw_piece_to_place():
 def draw_status():
     if env.done:
         if env.winner == 1:
-            msg   = "Vous avez gagné !" if MODE == 1 else "Agent RL a gagné !"
+            if MODE == 1 or MODE == 3:
+                msg = "Vous avez gagné !"
+            else:
+                msg = "Agent RL a gagné !"
             color = GREEN
         elif env.winner == 2:
-            msg   = "Agent RL a gagné !" if MODE == 1 else "Random a gagné !"
+            if MODE == 1:
+                msg = "Agent RL a gagné !"
+            elif MODE == 3:
+                msg = "Random a gagné !"
+            else:
+                msg = "Random a gagné !"
             color = RED
         else:
             msg, color = "Match nul !", TEXT
@@ -149,15 +157,27 @@ def draw_status():
                 color = BLUE
             else:
                 msg, color = "Agent RL réfléchit (J2)...", RED
-        else:
+        elif MODE == 2:
             msg   = "Agent RL joue (J1)..." if env.current_player == 1 else "Random joue (J2)..."
             color = BLUE if env.current_player == 1 else RED
+        else:  # MODE 3 : Humain vs Random
+            if env.current_player == 1:
+                msg   = f"Votre tour (J1) — {'choisissez une pièce' if env.phase == 'choose' else 'placez la pièce'}"
+                color = BLUE
+            else:
+                msg, color = "Random joue (J2)...", RED
     screen.blit(title_font.render(msg, True, color), (40, TOP_TEXT_Y))
     screen.blit(small_font.render("R : recommencer | M : menu", True, (180,180,180)), (40, SUB_TEXT_Y))
 
 def draw_turn_info():
+    if MODE == 1:
+        mode_str = "Humain vs Agent RL"
+    elif MODE == 2:
+        mode_str = "Agent RL vs Random"
+    else:
+        mode_str = "Humain vs Random"
     lines = [f"Phase : {env.phase}", f"Joueur : {env.current_player}",
-             f"Mode : {'Humain vs Agent RL' if MODE == 1 else 'Agent RL vs Random'}"]
+             f"Mode : {mode_str}"]
     for i, line in enumerate(lines):
         screen.blit(info_font.render(line, True, TEXT), (40, 860 + i * 34))
 
@@ -167,15 +187,19 @@ def draw_menu():
     screen.blit(title, (WIDTH//2 - title.get_width()//2, 100))
     btn1 = pygame.Rect(300, 220, 800, 80)
     btn2 = pygame.Rect(300, 340, 800, 80)
-    pygame.draw.rect(screen, BLUE,  btn1, border_radius=10)
-    pygame.draw.rect(screen, GREEN, btn2, border_radius=10)
+    btn3 = pygame.Rect(300, 460, 800, 80)
+    pygame.draw.rect(screen, BLUE,   btn1, border_radius=10)
+    pygame.draw.rect(screen, GREEN,  btn2, border_radius=10)
+    pygame.draw.rect(screen, RED,    btn3, border_radius=10)
     t1 = info_font.render("Humain (J1) vs Agent RL (J2)", True, WHITE)
     t2 = info_font.render("Regarder : Agent RL (J1) vs Random (J2)", True, WHITE)
+    t3 = info_font.render("Humain (J1) vs Random (J2)", True, WHITE)
     screen.blit(t1, (btn1.centerx - t1.get_width()//2, btn1.centery - t1.get_height()//2))
     screen.blit(t2, (btn2.centerx - t2.get_width()//2, btn2.centery - t2.get_height()//2))
+    screen.blit(t3, (btn3.centerx - t3.get_width()//2, btn3.centery - t3.get_height()//2))
     screen.blit(small_font.render("Cliquez pour choisir", True, (180,180,180)),
-                (WIDTH//2 - small_font.size("Cliquez pour choisir")[0]//2, 480))
-    return btn1, btn2
+                (WIDTH//2 - small_font.size("Cliquez pour choisir")[0]//2, 600))
+    return btn1, btn2, btn3
 
 
 # ── Boucle principale ─────────────────────────────────────────
@@ -187,7 +211,7 @@ while running:
     screen.fill(BG)
 
     if in_menu:
-        btn1, btn2 = draw_menu()
+        btn1, btn2, btn3 = draw_menu()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -197,6 +221,8 @@ while running:
                 if btn2.collidepoint(event.pos):
                     MODE = 2; env.reset(); in_menu = False
                     pending_ai = True; last_ai_time = pygame.time.get_ticks()
+                if btn3.collidepoint(event.pos):
+                    MODE = 3; env.reset(); in_menu = False; pending_ai = False
         pygame.display.flip()
         continue
 
@@ -217,8 +243,8 @@ while running:
             if event.key == pygame.K_m:
                 in_menu = True; env.reset(); pending_ai = False
 
-        # Humain joue (MODE 1, joueur 1)
-        if MODE == 1 and event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+        # Humain joue (MODE 1 ou 3, joueur 1)
+        if (MODE == 1 or MODE == 3) and event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if env.done or pending_ai or env.current_player != 1:
                 continue
             mx, my = pygame.mouse.get_pos()
@@ -245,7 +271,14 @@ while running:
     if pending_ai and not env.done and now - last_ai_time >= AI_DELAY_MS:
         if MODE == 1 and env.current_player == 2:
             env.step(agent_rl_action())
-            pending_ai = False
+            last_ai_time = now
+            if env.done or env.current_player == 1:
+                pending_ai = False
+        elif MODE == 3 and env.current_player == 2:
+            env.step(agent_random.Choisir_action(env))
+            last_ai_time = now
+            if env.done or env.current_player == 1:
+                pending_ai = False
         elif MODE == 2:
             if env.current_player == 1:
                 env.step(agent_rl_action())

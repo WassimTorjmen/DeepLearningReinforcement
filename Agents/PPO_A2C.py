@@ -79,7 +79,9 @@ class PPOAgent:
         state_t = torch.FloatTensor(state).unsqueeze(0).to(self.device)
         probs   = self.policy(state_t).squeeze(0)
 
-        mask    = torch.zeros(self.num_actions)
+        mask = torch.zeros(self.num_actions, device=self.device)
+        #Old version
+        #mask    = torch.zeros(self.num_actions)
         mask[available_actions] = 1.0
         probs   = probs * mask
         probs   = probs / (probs.sum() + 1e-8)
@@ -114,7 +116,18 @@ class PPOAgent:
         returns = torch.FloatTensor(returns).to(self.device)
 
         # ── Calcul des valeurs et advantages ── identique au REINFORCE Critic
-        states_t   = torch.FloatTensor(self.saved_states).to(self.device)
+        #states_np = np.asarray(self.saved_states, dtype=np.float32)
+        #states_t = torch.as_tensor(states_np, dtype=torch.float32, device=self.device)
+        states_t = torch.as_tensor(
+        np.asarray(self.saved_states, dtype=np.float32),
+        device=self.device
+        )
+
+
+
+
+
+        #states_t   = torch.FloatTensor(self.saved_states).to(self.device)
         values     = self.critic(states_t)
         advantages = returns - values.detach()
 
