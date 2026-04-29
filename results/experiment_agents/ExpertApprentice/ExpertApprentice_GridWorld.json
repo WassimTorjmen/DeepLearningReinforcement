@@ -24,5 +24,56 @@
     "score_moyen": 1.0,
     "longueur_moy": 4.0,
     "temps_coup_ms": 0.4817
+  },
+  "1000_episodes": {
+    "agent": "ExpertApprentice",
+    "env": "GridWorld (5\u00d75)",
+    "num_episodes": 1000,
+    "elapsed_s": 123.3,
+    "hyperparams": {
+      "hidden_size": 128,
+      "lr": 0.001,
+      "n_simulations": 50
+    },
+    "checkpoints": {
+      "1000": {
+        "score_moyen": 1.0,
+        "longueur_moy": 4.0,
+        "temps_coup_ms": 0.2934
+      }
+    },
+    "final_eval": {
+      "score_moyen": 1.0,
+      "longueur_moy": 4.0,
+      "temps_coup_ms": 0.2416
+    }
+  },
+  "10000_episodes": {
+    "agent": "ExpertApprentice",
+    "env": "GridWorld (5\u00d75)",
+    "num_episodes": 10000,
+    "elapsed_s": 1320.8,
+    "hyperparams": {
+      "hidden_size": 128,
+      "lr": 0.001,
+      "n_simulations": 50
+    },
+    "checkpoints": {
+      "1000": {
+        "score_moyen": 1.0,
+        "longueur_moy": 4.0,
+        "temps_coup_ms": 0.3319
+      },
+      "10000": {
+        "score_moyen": 1.0,
+        "longueur_moy": 4.0,
+        "temps_coup_ms": 0.1955
+      }
+    },
+    "final_eval": {
+      "score_moyen": 1.0,
+      "longueur_moy": 4.0,
+      "temps_coup_ms": 0.3457
+    }
   }
 }

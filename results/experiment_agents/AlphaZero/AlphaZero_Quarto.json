@@ -1,8 +1,8 @@
 {
   "agent": "AlphaZero",
   "env": "Quarto (vs Random)",
-  "num_episodes": 5000,
-  "elapsed_s": 1284.3,
+  "num_episodes": 10000,
+  "elapsed_s": 817.7,
   "hyperparams": {
     "hidden_size": 256,
     "n_simulations": 30,
@@ -13,34 +13,75 @@
   },
   "checkpoints": {
     "1000": {
-      "score_moyen": 0.302,
-      "longueur_moy": 21.78,
-      "temps_coup_ms": 0.4872
+      "score_moyen": 0.156,
+      "longueur_moy": 21.69,
+      "temps_coup_ms": 0.1526
     },
-    "5000": {
-      "score_moyen": 0.216,
-      "longueur_moy": 22.45,
-      "temps_coup_ms": 1.1443
+    "10000": {
+      "score_moyen": 0.186,
+      "longueur_moy": 22.22,
+      "temps_coup_ms": 0.1425
     }
   },
   "final_eval": {
-    "score_moyen": 0.24,
-    "longueur_moy": 21.7,
-    "temps_coup_ms": 1.4505,
-    "taux_victoire": 0.612,
-    "taux_nul": 0.016,
-    "taux_defaite": 0.372,
+    "score_moyen": 0.212,
+    "longueur_moy": 22.16,
+    "temps_coup_ms": 0.1402,
+    "taux_victoire": 0.594,
+    "taux_nul": 0.024,
+    "taux_defaite": 0.382,
     "n_games": 500,
     "mode": "network"
   },
   "final_eval_mcts": {
-    "score_moyen": 0.355,
-    "longueur_moy": 22.14,
-    "temps_coup_ms": 35.3837,
-    "taux_victoire": 0.665,
-    "taux_nul": 0.025,
-    "taux_defaite": 0.31,
+    "score_moyen": 0.395,
+    "longueur_moy": 21.98,
+    "temps_coup_ms": 6.4768,
+    "taux_victoire": 0.695,
+    "taux_nul": 0.005,
+    "taux_defaite": 0.3,
     "n_games": 200,
     "mode": "mcts"
+  },
+  "1000_episodes": {
+    "agent": "AlphaZero",
+    "env": "Quarto (vs Random)",
+    "num_episodes": 1000,
+    "elapsed_s": 193.7,
+    "hyperparams": {
+      "hidden_size": 256,
+      "n_simulations": 30,
+      "c_puct": 1.5,
+      "lr": 0.001,
+      "state_size": 105,
+      "num_actions": 32
+    },
+    "checkpoints": {
+      "1000": {
+        "score_moyen": 0.142,
+        "longueur_moy": 21.5,
+        "temps_coup_ms": 0.3793
+      }
+    },
+    "final_eval": {
+      "score_moyen": 0.146,
+      "longueur_moy": 21.86,
+      "temps_coup_ms": 0.2996,
+      "taux_victoire": 0.566,
+      "taux_nul": 0.014,
+      "taux_defaite": 0.42,
+      "n_games": 500,
+      "mode": "network"
+    },
+    "final_eval_mcts": {
+      "score_moyen": 0.375,
+      "longueur_moy": 21.15,
+      "temps_coup_ms": 16.017,
+      "taux_victoire": 0.68,
+      "taux_nul": 0.015,
+      "taux_defaite": 0.305,
+      "n_games": 200,
+      "mode": "mcts"
+    }
   }
 }

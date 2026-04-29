@@ -1,23 +1,51 @@
 {
   "agent": "MuZero",
   "env": "TicTacToe (vs Random)",
-  "num_episodes": 100,
-  "elapsed_s": 2.7,
+  "num_episodes": 10000,
+  "elapsed_s": 55.2,
   "hyperparams": {
     "hidden_size": 128,
     "lr": 0.001,
     "n_simulations": 3
   },
   "checkpoints": {
-    "100": {
-      "score_moyen": 0.398,
-      "longueur_moy": 7.57,
-      "temps_coup_ms": 0.435
+    "1000": {
+      "score_moyen": 0.386,
+      "longueur_moy": 7.5,
+      "temps_coup_ms": 0.1276
+    },
+    "10000": {
+      "score_moyen": 0.462,
+      "longueur_moy": 6.99,
+      "temps_coup_ms": 0.1316
     }
   },
   "final_eval": {
-    "score_moyen": 0.4,
-    "longueur_moy": 7.3,
-    "temps_coup_ms": 0.4827
+    "score_moyen": 0.6,
+    "longueur_moy": 7.06,
+    "temps_coup_ms": 0.1367
+  },
+  "1000_episodes": {
+    "agent": "MuZero",
+    "env": "TicTacToe (vs Random)",
+    "num_episodes": 1000,
+    "elapsed_s": 7.8,
+    "hyperparams": {
+      "hidden_size": 128,
+      "lr": 0.001,
+      "n_simulations": 3
+    },
+    "checkpoints": {
+      "1000": {
+        "score_moyen": 0.496,
+        "longueur_moy": 7.83,
+        "temps_coup_ms": 0.1653
+      }
+    },
+    "final_eval": {
+      "score_moyen": 0.464,
+      "longueur_moy": 7.77,
+      "temps_coup_ms": 0.15
+    }
   }
 }

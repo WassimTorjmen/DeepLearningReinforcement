@@ -17,5 +17,83 @@
     "score_moyen": 1.0,
     "longueur_moy": 25.9,
     "temps_coup_ms": 20.9525
+  },
+  "1000_episodes": {
+    "agent": "MCTS_UCT",
+    "env": "LineWorld",
+    "num_episodes": 1000,
+    "elapsed_s": 377.2,
+    "hyperparams": {
+      "n_simulations": 100
+    },
+    "checkpoints": {
+      "1000": {
+        "score_moyen": 1.0,
+        "longueur_moy": 24.07,
+        "temps_coup_ms": 15.6396
+      }
+    },
+    "final_eval": {
+      "score_moyen": 1.0,
+      "longueur_moy": 24.33,
+      "temps_coup_ms": 15.5299
+    }
+  },
+  "10000_episodes": {
+    "agent": "MCTS_UCT",
+    "env": "LineWorld",
+    "num_episodes": 10000,
+    "elapsed_s": 707.1,
+    "hyperparams": {
+      "n_simulations": 100
+    },
+    "checkpoints": {
+      "1000": {
+        "score_moyen": 1.0,
+        "longueur_moy": 24.39,
+        "temps_coup_ms": 22.2365
+      },
+      "10000": {
+        "score_moyen": 1.0,
+        "longueur_moy": 25.4,
+        "temps_coup_ms": 19.5353
+      }
+    },
+    "final_eval": {
+      "score_moyen": 1.0,
+      "longueur_moy": 24.37,
+      "temps_coup_ms": 15.4106
+    }
+  },
+  "100000_episodes": {
+    "agent": "MCTS_UCT",
+    "env": "LineWorld",
+    "num_episodes": 100000,
+    "elapsed_s": 661.1,
+    "hyperparams": {
+      "n_simulations": 100
+    },
+    "checkpoints": {
+      "1000": {
+        "score_moyen": 1.0,
+        "longueur_moy": 26.64,
+        "temps_coup_ms": 11.825
+      },
+      "10000": {
+        "score_moyen": 1.0,
+        "longueur_moy": 25.84,
+        "temps_coup_ms": 11.7898
+      },
+      "100000": {
+        "score_moyen": 1.0,
+        "longueur_moy": 22.97,
+        "temps_coup_ms": 11.695
+      }
+    },
+    "final_eval": {
+      "score_moyen": 1.0,
+      "longueur_moy": 25.19,
+      "temps_coup_ms": 17.2146
+    }
   }
 }

@@ -17,5 +17,83 @@
     "score_moyen": 1.0,
     "longueur_moy": 7.4,
     "temps_coup_ms": 168.2303
+  },
+  "1000_episodes": {
+    "agent": "RandomRollout",
+    "env": "GridWorld (5\u00d75)",
+    "num_episodes": 1000,
+    "elapsed_s": 179.4,
+    "hyperparams": {
+      "n_rollouts": 50
+    },
+    "checkpoints": {
+      "1000": {
+        "score_moyen": 1.0,
+        "longueur_moy": 6.78,
+        "temps_coup_ms": 26.3857
+      }
+    },
+    "final_eval": {
+      "score_moyen": 1.0,
+      "longueur_moy": 6.79,
+      "temps_coup_ms": 26.5121
+    }
+  },
+  "10000_episodes": {
+    "agent": "RandomRollout",
+    "env": "GridWorld (5\u00d75)",
+    "num_episodes": 10000,
+    "elapsed_s": 818.0,
+    "hyperparams": {
+      "n_rollouts": 50
+    },
+    "checkpoints": {
+      "1000": {
+        "score_moyen": 1.0,
+        "longueur_moy": 6.66,
+        "temps_coup_ms": 26.6192
+      },
+      "10000": {
+        "score_moyen": 1.0,
+        "longueur_moy": 6.88,
+        "temps_coup_ms": 90.4055
+      }
+    },
+    "final_eval": {
+      "score_moyen": 1.0,
+      "longueur_moy": 6.6,
+      "temps_coup_ms": 126.7116
+    }
+  },
+  "100000_episodes": {
+    "agent": "RandomRollout",
+    "env": "GridWorld (5\u00d75)",
+    "num_episodes": 100000,
+    "elapsed_s": 388.8,
+    "hyperparams": {
+      "n_rollouts": 50
+    },
+    "checkpoints": {
+      "1000": {
+        "score_moyen": 1.0,
+        "longueur_moy": 6.84,
+        "temps_coup_ms": 35.2078
+      },
+      "10000": {
+        "score_moyen": 1.0,
+        "longueur_moy": 6.81,
+        "temps_coup_ms": 26.6568
+      },
+      "100000": {
+        "score_moyen": 1.0,
+        "longueur_moy": 6.6,
+        "temps_coup_ms": 26.3032
+      }
+    },
+    "final_eval": {
+      "score_moyen": 1.0,
+      "longueur_moy": 6.6,
+      "temps_coup_ms": 27.4917
+    }
   }
 }

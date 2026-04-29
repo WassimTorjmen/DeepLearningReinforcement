@@ -1,8 +1,8 @@
 {
   "agent": "ExpertApprentice",
   "env": "TicTacToe (vs Random)",
-  "num_episodes": 5000,
-  "elapsed_s": 101.4,
+  "num_episodes": 10000,
+  "elapsed_s": 99.6,
   "hyperparams": {
     "hidden_size": 128,
     "lr": 0.001,
@@ -10,19 +10,42 @@
   },
   "checkpoints": {
     "1000": {
-      "score_moyen": 0.896,
-      "longueur_moy": 5.86,
-      "temps_coup_ms": 0.154
-    },
-    "5000": {
-      "score_moyen": 0.936,
+      "score_moyen": 0.91,
       "longueur_moy": 5.36,
-      "temps_coup_ms": 0.5342
+      "temps_coup_ms": 0.1182
+    },
+    "10000": {
+      "score_moyen": 0.944,
+      "longueur_moy": 5.36,
+      "temps_coup_ms": 0.5109
     }
   },
   "final_eval": {
-    "score_moyen": 0.916,
-    "longueur_moy": 5.4,
-    "temps_coup_ms": 0.5329
+    "score_moyen": 0.942,
+    "longueur_moy": 5.37,
+    "temps_coup_ms": 0.5544
+  },
+  "1000_episodes": {
+    "agent": "ExpertApprentice",
+    "env": "TicTacToe (vs Random)",
+    "num_episodes": 1000,
+    "elapsed_s": 14.8,
+    "hyperparams": {
+      "hidden_size": 128,
+      "lr": 0.001,
+      "n_simulations": 50
+    },
+    "checkpoints": {
+      "1000": {
+        "score_moyen": 0.914,
+        "longueur_moy": 5.67,
+        "temps_coup_ms": 0.3651
+      }
+    },
+    "final_eval": {
+      "score_moyen": 0.894,
+      "longueur_moy": 5.72,
+      "temps_coup_ms": 0.3678
+    }
   }
 }
